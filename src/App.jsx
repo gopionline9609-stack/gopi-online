@@ -964,23 +964,13 @@ const createOrder = async () => {
   <button
     type="button"
     onClick={() => {
-  alert('PAY NOW clicked')
+  const upiUrl =
+    `upi://pay?pa=gopi742301@okaxis` +
+    `&pn=GOPI%20ONLINE` +
+    `&am=${order.amount}` +
+    `&cu=INR`
 
-  const service = services.find(
-    (s) => s.id === order.service_id
-  )
-
-  if (!service) {
-    alert('Service information not found.')
-    return
-  }
-
-  setSelectedService(service)
-  setPaymentOrder(order)
-
-  alert('Payment Order Set: ' + order.id)
-
-  setTransactionReference('')
+  window.location.href = upiUrl
 }}
     style={{
       width: '100%',
