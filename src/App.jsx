@@ -964,6 +964,9 @@ const createOrder = async () => {
   <button
     type="button"
     onClick={() => {
+      alert('PAY NOW clicked')
+
+      
       const service = services.find(
         (s) => s.id === order.service_id
       )
