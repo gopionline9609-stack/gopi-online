@@ -464,6 +464,9 @@ className="admin-section-mobile"
         <div style={{ color: '#ccc', marginBottom: '6px' }}>
           Payment Method: {payment.payment_method}
         </div>
+        <div style={{ color: '#888', marginBottom: '6px', fontSize: '13px' }}>
+  Payment Submitted: {formatDateTime(payment.created_at)}
+</div>
 
         <div style={{ color: '#ccc', marginBottom: '12px' }}>
           UTR / Transaction ID:{' '}
@@ -476,6 +479,17 @@ className="admin-section-mobile"
           Status:{' '}
           <strong>{payment.status}</strong>
         </div>
+        {payment.verified_at && (
+  <div
+    style={{
+      color: '#888',
+      marginBottom: '12px',
+      fontSize: '13px',
+    }}
+  >
+    Verified At: {formatDateTime(payment.verified_at)}
+  </div>
+)}
 
         {payment.status === 'Pending' ? (
   <button
@@ -584,6 +598,25 @@ className="admin-section-mobile"
                 <div style={{ color: '#ccc', marginBottom: '6px' }}>
                   Amount: ₹{order.amount}
                 </div>
+                <div
+  style={{
+    color: '#888',
+    marginBottom: '6px',
+    fontSize: '13px',
+  }}
+>
+  Order Date & Time: {formatDateTime(order.created_at)}
+</div>
+
+<div
+  style={{
+    color: '#777',
+    marginBottom: '10px',
+    fontSize: '12px',
+  }}
+>
+  Last Updated: {formatDateTime(order.updated_at)}
+</div>
 
                 <div style={{ marginBottom: '12px' }}>
                   Current Status:{' '}
@@ -733,7 +766,8 @@ const createOrder = async () => {
       customer_phone: customerPhone,
       customer_address: customerAddress,
      amount: getOrderAmount(), 
-      status: 'Pending Payment'
+      status: 'Pending Payment',
+       updated_at: new Date().toISOString(),
     })
     .select()
     .single()
@@ -855,9 +889,50 @@ const createOrder = async () => {
             marginBottom: '15px'
           }}
         >
-          <div style={{ fontWeight: 'bold', fontSize: '18px' }}>
-            Order #{order.id}
-          </div>
+         <div
+  style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    gap: '12px',
+    marginBottom: '10px',
+  }}
+>
+  <div>
+    <div
+      style={{
+        fontWeight: 'bold',
+        fontSize: '18px',
+      }}
+    >
+      Order #{order.id}
+    </div>
+
+    <div
+      style={{
+        color: '#777',
+        fontSize: '12px',
+        marginTop: '5px',
+      }}
+    >
+      {formatDateTime(order.created_at)}
+    </div>
+  </div>
+
+  <div
+    style={{
+      color: '#d4af37',
+      fontSize: '12px',
+      fontWeight: 'bold',
+      padding: '6px 9px',
+      borderRadius: '20px',
+      background: '#2a2410',
+      whiteSpace: 'nowrap',
+    }}
+  >
+    ORDER
+  </div>
+</div>
 
           <div style={{ marginTop: '8px', color: '#ccc' }}>
             Amount: ₹{order.amount}
@@ -866,6 +941,25 @@ const createOrder = async () => {
           <div style={{ marginTop: '8px' }}>
             Status: <strong>{order.status}</strong>
           </div>
+          <div
+  style={{
+    marginTop: '8px',
+    color: '#888',
+    fontSize: '13px',
+  }}
+>
+  Order Date & Time: {formatDateTime(order.created_at)}
+</div>
+
+<div
+  style={{
+    marginTop: '6px',
+    color: '#777',
+    fontSize: '12px',
+  }}
+>
+  Last Updated: {formatDateTime(order.updated_at)}
+</div>
           {order.status === 'Pending Payment' && (
   <button
     type="button"
@@ -1693,13 +1787,25 @@ if (orderError) {
       style={styles.footer}>
         <strong>GOPI ONLINE</strong>
         <span>
-          © 2026 GOPI ONLINE. Digital Service Center.
-        </span>
+  © {new Date().getFullYear()} GOPI ONLINE. Digital Service Center.
+</span>
       </footer>
     </div>
   )
 }
+function formatDateTime(dateString) {
+  if (!dateString) return '-'
 
+  return new Intl.DateTimeFormat('en-IN', {
+    timeZone: 'Asia/Kolkata',
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  }).format(new Date(dateString))
+}
 function getServiceIcon(name) {
   const text = name.toLowerCase()
 
