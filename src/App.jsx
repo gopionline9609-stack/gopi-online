@@ -866,6 +866,39 @@ const createOrder = async () => {
           <div style={{ marginTop: '8px' }}>
             Status: <strong>{order.status}</strong>
           </div>
+          {order.status === 'Pending Payment' && (
+  <button
+    type="button"
+    onClick={() => {
+      const service = services.find(
+        (s) => s.id === order.service_id
+      )
+
+      if (!service) {
+        alert('Service information not found.')
+        return
+      }
+
+      setSelectedService(service)
+      setPaymentOrder(order)
+      setTransactionReference('')
+    }}
+    style={{
+      width: '100%',
+      marginTop: '15px',
+      padding: '13px',
+      border: 'none',
+      borderRadius: '10px',
+      background: '#d4af37',
+      color: '#000',
+      fontWeight: 'bold',
+      cursor: 'pointer',
+      fontSize: '14px',
+    }}
+  >
+    💳 PAY NOW — ₹{order.amount}
+  </button>
+)}
 {/* ORDER TRACKING */}
 <div
   style={{
@@ -1014,7 +1047,7 @@ const createOrder = async () => {
         </div>
       </section>
 {/* ORDER FORM */}
-{selectedService && (
+{selectedService && !paymentOrder && (
   <section
     className="order-form-mobile"
     style={{
