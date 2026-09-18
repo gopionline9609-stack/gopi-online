@@ -964,22 +964,24 @@ const createOrder = async () => {
   <button
     type="button"
     onClick={() => {
-      alert('PAY NOW clicked')
+  alert('PAY NOW clicked')
 
-      
-      const service = services.find(
-        (s) => s.id === order.service_id
-      )
+  const service = services.find(
+    (s) => s.id === order.service_id
+  )
 
-      if (!service) {
-        alert('Service information not found.')
-        return
-      }
+  if (!service) {
+    alert('Service information not found.')
+    return
+  }
 
-      setSelectedService(service)
-      setPaymentOrder(order)
-      setTransactionReference('')
-    }}
+  setSelectedService(service)
+  setPaymentOrder(order)
+
+  alert('Payment Order Set: ' + order.id)
+
+  setTransactionReference('')
+}}
     style={{
       width: '100%',
       marginTop: '15px',
