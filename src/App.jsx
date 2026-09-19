@@ -970,7 +970,7 @@ const createOrder = async () => {
     type="button"
     onClick={() => {
   const upiUrl =
-    `upi://pay?pa=gopi742301@okaxis` +
+    `upi://pay?pa=gopi742301@okicici` +
     `&pn=GOPI%20ONLINE` +
     `&am=${order.amount}` +
     `&cu=INR`
@@ -1534,7 +1534,7 @@ const createOrder = async () => {
       fontSize: '13px',
     }}
   >
-    UPI ID: gopi742301@okaxis
+    UPI ID: gopi742301@okicici
   </div>
 </div>
         <div
@@ -1555,7 +1555,7 @@ const createOrder = async () => {
             letterSpacing: '1px',
           }}
         >
-          gopi742301@okaxis
+          gopi742301@okicici
         </div>
       </div>
 <div style={{
@@ -1566,27 +1566,11 @@ const createOrder = async () => {
   border: '1px solid rgba(255, 193, 7, 0.25)',
   textAlign: 'center'
 }}>
-  <div style={{
-    fontSize: '12px',
-    fontWeight: '600',
-    opacity: 0.75,
-    marginBottom: '5px',
-    letterSpacing: '0.3px'
-  }}>
-    PAYMENT WITH PHONE NUMBER
-  </div>
-
-  <div style={{
-    fontSize: '17px',
-    fontWeight: '700',
-    letterSpacing: '0.5px'
-  }}>
-    9609047478
-  </div>
+  
 </div>
       {/* GOOGLE PAY */}
       <a
-        href={`upi://pay?pa=gopi742301@okaxis&pn=GOPI%20ONLINE&am=${paymentOrder.amount}&cu=INR`}
+        href={`upi://pay?pa=gopi742301@okicici&pn=GOPI%20ONLINE&am=${paymentOrder.amount}&cu=INR`}
         style={{
           display: 'block',
           textAlign: 'center',
