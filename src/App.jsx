@@ -35,16 +35,21 @@ function App() {
   }, [session])
 
   const loadServices = async () => {
-    const { data, error } = await supabase
-      .from('services')
-      .select('*')
-      .eq('is_active', true)
-      .order('id')
+  const { data, error } = await supabase
+    .from('services')
+    .select('*')
+    .eq('is_active', true)
+    .order('id')
 
-    if (!error) {
-      setServices(data || [])
-    }
+  if (error) {
+    console.error('Services loading error:', error)
+    alert('Services load failed: ' + error.message)
+    return
   }
+
+  console.log('Services loaded:', data)
+  setServices(data || [])
+}
 
   const handleSubmit = async (e) => {
     e.preventDefault()
