@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { supabase } from './supabase'
 import paymentQR from './assets/payment-qr.png'
 
@@ -97,21 +98,45 @@ function App() {
   if (session) {
   const userEmail = session.user.email
 
-  if (userEmail === 'gopi742301@gmail.com') {
-    return (
-      <AdminDashboard
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/dashboard"
+          element={
+            userEmail === 'gopi742301@gmail.com' ? (
+              <AdminDashboard
+                session={session}
+                logout={logout}
+              />
+            ) : (
+              <Dashboard
+                session={session}
+                services={services}
+                logout={logout}
+              />
+            )
+          }
+        />
+        <Route
+  path="/orders"
+  element={
+    userEmail === 'gopi742301@gmail.com' ? (
+      <Navigate to="/dashboard" replace />
+    ) : (
+      <OrdersPage
         session={session}
         logout={logout}
       />
     )
   }
-
-  return (
-    <Dashboard
-      session={session}
-      services={services}
-      logout={logout}
-    />
+/>
+        <Route
+          path="*"
+          element={<Navigate to="/dashboard" replace />}
+        />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
@@ -675,6 +700,569 @@ className="admin-section-mobile"
     </>
   )
 }
+
+function OrdersPage({ session, logout }) {
+  const [orders, setOrders] = useState([])
+  const [ordersLoading, setOrdersLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      if (!session?.user?.id) return
+
+      setOrdersLoading(true)
+
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        console.error('Orders fetch error:', error)
+        setOrders([])
+      } else {
+        setOrders(data || [])
+      }
+
+      setOrdersLoading(false)
+    }
+
+    fetchOrders()
+  }, [session?.user?.id])
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return '-'
+
+    return new Intl.DateTimeFormat('en-IN', {
+      timeZone: 'Asia/Kolkata',
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    }).format(new Date(dateString))
+  }
+
+  const getStatusStyle = (status) => {
+    if (status === 'Payment Verified' || status === 'Completed') {
+      return {
+        background: '#143d27',
+        color: '#63e6a1',
+        border: '1px solid #236b45',
+      }
+    }
+
+    if (status === 'Payment Submitted') {
+      return {
+        background: '#3d3214',
+        color: '#f5d76e',
+        border: '1px solid #6b5923',
+      }
+    }
+
+    if (status === 'Processing' || status === 'Ready') {
+      return {
+        background: '#172d46',
+        color: '#6db7ff',
+        border: '1px solid #28527d',
+      }
+    }
+
+    if (status === 'Rejected' || status === 'Cancelled') {
+      return {
+        background: '#3d1818',
+        color: '#ff7777',
+        border: '1px solid #713333',
+      }
+    }
+
+    return {
+      background: '#292929',
+      color: '#d4af37',
+      border: '1px solid #555',
+    }
+  }
+
+  return (
+    <div
+      style={{
+        minHeight: '100vh',
+        background:
+          'linear-gradient(135deg, #080808 0%, #111111 50%, #080808 100%)',
+        color: '#fff',
+        padding: '30px 18px 50px',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1050px',
+          margin: '0 auto',
+        }}
+      >
+
+        {/* HEADER */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '15px',
+            marginBottom: '35px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <div>
+            <div
+              style={{
+                color: '#d4af37',
+                fontSize: '12px',
+                fontWeight: '700',
+                letterSpacing: '3px',
+                marginBottom: '7px',
+              }}
+            >
+              GOPI ONLINE
+            </div>
+
+            <h1
+              style={{
+                margin: 0,
+                fontSize: '32px',
+                fontWeight: '800',
+                letterSpacing: '-0.5px',
+              }}
+            >
+              My Orders
+            </h1>
+
+            <p
+              style={{
+                margin: '8px 0 0',
+                color: '#999',
+                fontSize: '14px',
+              }}
+            >
+              Track and manage your service orders
+            </p>
+          </div>
+
+          <div
+            style={{
+              display: 'flex',
+              gap: '10px',
+              flexWrap: 'wrap',
+            }}
+          >
+            <button
+              onClick={() => {
+                window.location.href = '/dashboard'
+              }}
+              style={{
+                padding: '11px 18px',
+                borderRadius: '10px',
+                border: '1px solid #444',
+                background: '#171717',
+                color: '#fff',
+                cursor: 'pointer',
+                fontWeight: '600',
+              }}
+            >
+              ← Dashboard
+            </button>
+
+            <button
+              onClick={logout}
+              style={{
+                padding: '11px 18px',
+                borderRadius: '10px',
+                border: '1px solid #444',
+                background: '#171717',
+                color: '#fff',
+                cursor: 'pointer',
+                fontWeight: '600',
+              }}
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+
+        {/* SUMMARY */}
+        {!ordersLoading && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns:
+                'repeat(auto-fit, minmax(190px, 1fr))',
+              gap: '15px',
+              marginBottom: '25px',
+            }}
+          >
+            <div
+              style={{
+                background: '#121212',
+                border: '1px solid #292929',
+                borderRadius: '14px',
+                padding: '20px',
+              }}
+            >
+              <div
+                style={{
+                  color: '#888',
+                  fontSize: '13px',
+                  marginBottom: '8px',
+                }}
+              >
+                TOTAL ORDERS
+              </div>
+
+              <div
+                style={{
+                  fontSize: '28px',
+                  fontWeight: '800',
+                  color: '#d4af37',
+                }}
+              >
+                {orders.length}
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: '#121212',
+                border: '1px solid #292929',
+                borderRadius: '14px',
+                padding: '20px',
+              }}
+            >
+              <div
+                style={{
+                  color: '#888',
+                  fontSize: '13px',
+                  marginBottom: '8px',
+                }}
+              >
+                PENDING PAYMENT
+              </div>
+
+              <div
+                style={{
+                  fontSize: '28px',
+                  fontWeight: '800',
+                  color: '#f5d76e',
+                }}
+              >
+                {
+                  orders.filter(
+                    (order) => order.status === 'Pending Payment'
+                  ).length
+                }
+              </div>
+            </div>
+
+            <div
+              style={{
+                background: '#121212',
+                border: '1px solid #292929',
+                borderRadius: '14px',
+                padding: '20px',
+              }}
+            >
+              <div
+                style={{
+                  color: '#888',
+                  fontSize: '13px',
+                  marginBottom: '8px',
+                }}
+              >
+                COMPLETED
+              </div>
+
+              <div
+                style={{
+                  fontSize: '28px',
+                  fontWeight: '800',
+                  color: '#63e6a1',
+                }}
+              >
+                {
+                  orders.filter(
+                    (order) => order.status === 'Completed'
+                  ).length
+                }
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ORDERS */}
+        {ordersLoading ? (
+          <div
+            style={{
+              background: '#121212',
+              border: '1px solid #292929',
+              borderRadius: '16px',
+              padding: '50px 20px',
+              textAlign: 'center',
+              color: '#aaa',
+            }}
+          >
+            <div style={{ fontSize: '18px', marginBottom: '8px' }}>
+              Loading your orders...
+            </div>
+
+            <div style={{ fontSize: '13px', color: '#666' }}>
+              Please wait
+            </div>
+          </div>
+        ) : orders.length === 0 ? (
+          <div
+            style={{
+              background: '#121212',
+              border: '1px solid #292929',
+              borderRadius: '16px',
+              padding: '60px 20px',
+              textAlign: 'center',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '45px',
+                marginBottom: '15px',
+              }}
+            >
+              📦
+            </div>
+
+            <h2
+              style={{
+                margin: '0 0 8px',
+                fontSize: '21px',
+              }}
+            >
+              No Orders Yet
+            </h2>
+
+            <p
+              style={{
+                color: '#888',
+                fontSize: '14px',
+                marginBottom: '22px',
+              }}
+            >
+              Your service orders will appear here.
+            </p>
+
+            <button
+              onClick={() => {
+                window.location.href = '/dashboard'
+              }}
+              style={{
+                padding: '12px 22px',
+                borderRadius: '10px',
+                border: 'none',
+                background: '#d4af37',
+                color: '#111',
+                fontWeight: '700',
+                cursor: 'pointer',
+              }}
+            >
+              Browse Services
+            </button>
+          </div>
+        ) : (
+          <div>
+            {orders.map((order) => (
+              <div
+                key={order.id}
+                style={{
+                  background:
+                    'linear-gradient(145deg, #151515, #101010)',
+                  border: '1px solid #292929',
+                  borderRadius: '16px',
+                  padding: '22px',
+                  marginBottom: '15px',
+                  boxShadow: '0 8px 25px rgba(0,0,0,0.25)',
+                }}
+              >
+                {/* TOP */}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'flex-start',
+                    gap: '15px',
+                    flexWrap: 'wrap',
+                    marginBottom: '20px',
+                  }}
+                >
+                  <div>
+                    <div
+                      style={{
+                        color: '#777',
+                        fontSize: '12px',
+                        marginBottom: '5px',
+                      }}
+                    >
+                      ORDER ID
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: '19px',
+                        fontWeight: '800',
+                      }}
+                    >
+                      #{order.id}
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      ...getStatusStyle(order.status),
+                      padding: '7px 12px',
+                      borderRadius: '20px',
+                      fontSize: '12px',
+                      fontWeight: '700',
+                    }}
+                  >
+                    {order.status}
+                  </div>
+                </div>
+
+                {/* DETAILS */}
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns:
+                      'repeat(auto-fit, minmax(180px, 1fr))',
+                    gap: '15px',
+                    borderTop: '1px solid #252525',
+                    borderBottom: '1px solid #252525',
+                    padding: '18px 0',
+                  }}
+                >
+                  <div>
+                    <div
+                      style={{
+                        color: '#777',
+                        fontSize: '12px',
+                        marginBottom: '5px',
+                      }}
+                    >
+                      ORDER DATE
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: '14px',
+                        color: '#ddd',
+                      }}
+                    >
+                      {formatDateTime(order.created_at)}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div
+                      style={{
+                        color: '#777',
+                        fontSize: '12px',
+                        marginBottom: '5px',
+                      }}
+                    >
+                      LAST UPDATED
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: '14px',
+                        color: '#ddd',
+                      }}
+                    >
+                      {formatDateTime(order.updated_at)}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div
+                      style={{
+                        color: '#777',
+                        fontSize: '12px',
+                        marginBottom: '5px',
+                      }}
+                    >
+                      TOTAL AMOUNT
+                    </div>
+
+                    <div
+                      style={{
+                        fontSize: '21px',
+                        fontWeight: '800',
+                        color: '#d4af37',
+                      }}
+                    >
+                      ₹{order.amount}
+                    </div>
+                  </div>
+                </div>
+
+                {/* ACTIONS */}
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    marginTop: '18px',
+                  }}
+                >
+                  {order.status === 'Pending Payment' && (
+                    <button
+                      onClick={() => {
+                        const upiUrl =
+                          `upi://pay?pa=gopi742301@okicici` +
+                          `&pn=GOPI%20ONLINE` +
+                          `&am=${order.amount}` +
+                          `&cu=INR`
+
+                        window.location.href = upiUrl
+                      }}
+                      style={{
+                        padding: '12px 22px',
+                        borderRadius: '10px',
+                        border: 'none',
+                        background: '#d4af37',
+                        color: '#111',
+                        fontWeight: '800',
+                        cursor: 'pointer',
+                        minWidth: '130px',
+                      }}
+                    >
+                      PAY NOW →
+                    </button>
+                  )}
+
+                  {order.status !== 'Pending Payment' && (
+                    <div
+                      style={{
+                        color: '#777',
+                        fontSize: '13px',
+                        padding: '10px 0',
+                      }}
+                    >
+                      Order is being processed
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+      </div>
+    </div>
+  )
+}
 function Dashboard({ session, services, logout }) {
 
   const [paymentOrder, setPaymentOrder] = useState(null)
@@ -838,250 +1426,40 @@ const createOrder = async () => {
             Photo & Printing services — all in one place.
           </p>
 
-          <div 
-          className="dashboard-hero-buttons-mobile"
-          style={styles.heroButtons}>
-            <button style={styles.goldButton}>
-              Explore Services
-            </button>
-
-            <button
-  style={styles.outlineButton}
-  onClick={() => {
-    document.getElementById("my-orders")?.scrollIntoView({
-      behavior: "smooth",
-    });
-  }}
->
-  My Orders
-</button>
-          </div>
-        </div>
-
-        <div 
-        className="dashboard-hero-icon-mobile"
-        style={styles.heroIcon}>
-          💻
-        </div>
-      </section>
-{/* MY ORDERS */}
-<section id="my-orders" className="dashboard-my-orders-mobile" style={styles.section}>
-  <div style={styles.sectionHeading}>
-    <div>
-      <p style={styles.smallGold}>MY ORDERS</p>
-      <h2 style={styles.sectionTitle}>Your Orders</h2>
-    </div>
-  </div>
-
-  {ordersLoading ? (
-    <p style={{ textAlign: 'center', color: '#aaa' }}>
-      Loading your orders...
-    </p>
-  ) : orders.length === 0 ? (
-    <p style={{ textAlign: 'center', color: '#aaa' }}>
-      No orders found.
-    </p>
-  ) : (
-    <div>
-      {orders.map((order) => (
-        <div
-          key={order.id}
-          style={{
-            background: '#151515',
-            border: '1px solid #333',
-            borderRadius: '12px',
-            padding: '18px',
-            marginBottom: '15px'
-          }}
-        >
          <div
-  style={{
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    gap: '12px',
-    marginBottom: '10px',
-  }}
+  className="dashboard-hero-buttons-mobile"
+  style={styles.heroButtons}
 >
-  <div>
-    <div
-      style={{
-        fontWeight: 'bold',
-        fontSize: '18px',
-      }}
-    >
-      Order #{order.id}
-    </div>
-
-    <div
-      style={{
-        color: '#777',
-        fontSize: '12px',
-        marginTop: '5px',
-      }}
-    >
-      {formatDateTime(order.created_at)}
-    </div>
-  </div>
-
-  <div
-    style={{
-      color: '#d4af37',
-      fontSize: '12px',
-      fontWeight: 'bold',
-      padding: '6px 9px',
-      borderRadius: '20px',
-      background: '#2a2410',
-      whiteSpace: 'nowrap',
-    }}
-  >
-    ORDER
-  </div>
-</div>
-
-          <div style={{ marginTop: '8px', color: '#ccc' }}>
-            Amount: ₹{order.amount}
-          </div>
-
-          <div style={{ marginTop: '8px' }}>
-            Status: <strong>{order.status}</strong>
-          </div>
-          <div
-  style={{
-    marginTop: '8px',
-    color: '#888',
-    fontSize: '13px',
-  }}
->
-  Order Date & Time: {formatDateTime(order.created_at)}
-</div>
-
-<div
-  style={{
-    marginTop: '6px',
-    color: '#777',
-    fontSize: '12px',
-  }}
->
-  Last Updated: {formatDateTime(order.updated_at)}
-</div>
-          {order.status === 'Pending Payment' && (
   <button
-    type="button"
+    style={styles.goldButton}
     onClick={() => {
-  const upiUrl =
-    `upi://pay?pa=gopi742301@okicici` +
-    `&pn=GOPI%20ONLINE` +
-    `&am=${order.amount}` +
-    `&cu=INR`
-
-  window.location.href = upiUrl
-}}
-    style={{
-      width: '100%',
-      marginTop: '15px',
-      padding: '13px',
-      border: 'none',
-      borderRadius: '10px',
-      background: '#d4af37',
-      color: '#000',
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      fontSize: '14px',
+      document.getElementById("services")?.scrollIntoView({
+        behavior: "smooth",
+      })
     }}
   >
-    💳 PAY NOW — ₹{order.amount}
+    Explore Services
   </button>
-)}
-{/* ORDER TRACKING */}
-<div
-  style={{
-    marginTop: '20px',
-    padding: '18px',
-    borderRadius: '12px',
-    background: '#101010',
-    border: '1px solid #333',
-  }}
->
-  <div
-    style={{
-      color: '#d4af37',
-      fontWeight: 'bold',
-      marginBottom: '15px',
+
+  <button
+    style={styles.outlineButton}
+    onClick={() => {
+      window.location.href = '/orders'
     }}
   >
-    ORDER TRACKING
-  </div>
-
-  {[
-    'Pending Payment',
-    'Payment Submitted',
-    'Payment Verified',
-    'Processing',
-    'Completed',
-  ].map((step, index) => {
-    const steps = [
-      'Pending Payment',
-      'Payment Submitted',
-      'Payment Verified',
-      'Processing',
-      'Completed',
-    ]
-
-    const currentIndex = steps.indexOf(order.status)
-    const isCompleted = index <= currentIndex
-
-    return (
-      <div
-        key={step}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          marginBottom: index === steps.length - 1 ? '0' : '12px',
-        }}
-      >
-        <div
-          style={{
-            width: '22px',
-            height: '22px',
-            borderRadius: '50%',
-            background: isCompleted ? '#d4af37' : '#333',
-            color: isCompleted ? '#000' : '#777',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '12px',
-            fontWeight: 'bold',
-            marginRight: '12px',
-          }}
-        >
-          {isCompleted ? '✓' : index + 1}
-        </div>
-
-        <div
-          style={{
-            color: isCompleted ? '#fff' : '#777',
-            fontWeight: isCompleted ? 'bold' : 'normal',
-          }}
-        >
-          {step}
-        </div>
-      </div>
-    )
-  })}
+    My Orders
+  </button>
+</div> 
 </div>
-          <div style={{ marginTop: '8px', color: '#999' }}>
-            Phone: {order.customer_phone}
-          </div>
-        </div>
-      ))}
-    </div>
-  )}
 </section>
+
+
       {/* SERVICES */}
-      <section 
-      className="dashboard-services-mobile"
-      style={styles.section}>
+      <section
+  id="services"
+  className="dashboard-services-mobile"
+  style={styles.section}
+>
         <div 
         className="dashboard-section-heading-mobile"
         style={styles.sectionHeading}>
@@ -1260,82 +1638,304 @@ const createOrder = async () => {
         />
       </div>
 
-      {/* PRICE */}
-      <div
+      {/* QUANTITY / OPTIONS */}
+{selectedService.name === 'Xerox' && (
+  <div style={{ marginBottom: '20px' }}>
+    <label
+      style={{
+        display: 'block',
+        color: '#aaa',
+        fontSize: '14px',
+        fontWeight: '600',
+        marginBottom: '10px',
+      }}
+    >
+      Number of Pages
+    </label>
+
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        background: '#191919',
+        border: '1px solid #333',
+        borderRadius: '12px',
+        padding: '8px',
+      }}
+    >
+      <button
+        type="button"
+        onClick={() =>
+          setQuantity(Math.max(1, quantity - 1))
+        }
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: '16px 18px',
-          marginBottom: '20px',
-          borderRadius: '12px',
-          background: '#191919',
-          border: '1px solid #292929',
+          width: '45px',
+          height: '45px',
+          borderRadius: '10px',
+          border: '1px solid #444',
+          background: '#242424',
+          color: '#fff',
+          fontSize: '24px',
+          cursor: 'pointer',
         }}
       >
-        <span style={{ color: '#999' }}>
-        {selectedService.name === 'Xerox' && (
-  <div style={{ marginBottom: '20px' }}>
-    <label style={styles.label}>Number of Pages</label>
+        −
+      </button>
 
-    <input
-      type="number"
-      min="1"
-      value={quantity}
-      onChange={(e) =>
-        setQuantity(Math.max(1, Number(e.target.value)))
-      }
-      style={styles.input}
-    />
-  </div>
-)}
-
-{selectedService.name === 'Passport Size Photo' && (
-  <div style={{ marginBottom: '20px' }}>
-    <label style={styles.label}>Photo Quantity</label>
-
-    <select
-      value={photoCount}
-      onChange={(e) => setPhotoCount(Number(e.target.value))}
-      style={styles.input}
-    >
-      <option value={3}>3 Photos — ₹20</option>
-      <option value={6}>6 Photos — ₹35</option>
-      <option value={9}>9 Photos — ₹50</option>
-      <option value={12}>12 Photos — ₹65</option>
-    </select>
-  </div>
-)}
-
-{selectedService.name === 'Printing' && (
-  <div style={{ marginBottom: '20px' }}>
-    <label style={styles.label}>Number of Pages</label>
-
-    <input
-      type="number"
-      min="1"
-      value={printingCount}
-      onChange={(e) =>
-        setPrintingCount(Math.max(1, Number(e.target.value)))
-      }
-      style={styles.input}
-    />
-  </div>
-)}
-          Service Charge
-        </span>
-
-        <strong
+      <div
+        style={{
+          textAlign: 'center',
+          minWidth: '100px',
+        }}
+      >
+        <div
           style={{
-            color: '#d4af37',
-            fontSize: '20px',
+            fontSize: '22px',
+            fontWeight: '800',
+            color: '#fff',
           }}
         >
-          {getOrderAmount()
-            ? `₹${getOrderAmount()}`
-            : 'Contact us'}
-        </strong>
+          {quantity}
+        </div>
+
+        <div
+          style={{
+            fontSize: '11px',
+            color: '#777',
+          }}
+        >
+          pages
+        </div>
       </div>
+
+      <button
+        type="button"
+        onClick={() =>
+          setQuantity(quantity + 1)
+        }
+        style={{
+          width: '45px',
+          height: '45px',
+          borderRadius: '10px',
+          border: '1px solid #444',
+          background: '#242424',
+          color: '#fff',
+          fontSize: '24px',
+          cursor: 'pointer',
+        }}
+      >
+        +
+      </button>
+    </div>
+  </div>
+)}
+
+{/* PASSPORT PHOTO */}
+{selectedService.name === 'Passport Size Photo' && (
+  <div style={{ marginBottom: '20px' }}>
+    <label
+      style={{
+        display: 'block',
+        color: '#aaa',
+        fontSize: '14px',
+        fontWeight: '600',
+        marginBottom: '10px',
+      }}
+    >
+      Photo Quantity
+    </label>
+
+    <div
+      style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '10px',
+      }}
+    >
+      {[3, 6, 9, 12].map((count) => (
+        <button
+          key={count}
+          type="button"
+          onClick={() => setPhotoCount(count)}
+          style={{
+            padding: '13px 8px',
+            borderRadius: '10px',
+            border:
+              photoCount === count
+                ? '1px solid #d4af37'
+                : '1px solid #333',
+            background:
+              photoCount === count
+                ? '#2a2412'
+                : '#191919',
+            color:
+              photoCount === count
+                ? '#d4af37'
+                : '#ddd',
+            fontWeight: '700',
+            cursor: 'pointer',
+          }}
+        >
+          {count} Photos
+          <div
+            style={{
+              fontSize: '12px',
+              marginTop: '4px',
+              color:
+                photoCount === count
+                  ? '#d4af37'
+                  : '#777',
+            }}
+          >
+            ₹
+            {count === 3
+              ? 20
+              : count === 6
+              ? 35
+              : count === 9
+              ? 50
+              : 65}
+          </div>
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+
+{/* PRINTING */}
+{selectedService.name === 'Printing' && (
+  <div style={{ marginBottom: '20px' }}>
+    <label
+      style={{
+        display: 'block',
+        color: '#aaa',
+        fontSize: '14px',
+        fontWeight: '600',
+        marginBottom: '10px',
+      }}
+    >
+      Number of Pages
+    </label>
+
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        background: '#191919',
+        border: '1px solid #333',
+        borderRadius: '12px',
+        padding: '8px',
+      }}
+    >
+      <button
+        type="button"
+        onClick={() =>
+          setPrintingCount(
+            Math.max(1, printingCount - 1)
+          )
+        }
+        style={{
+          width: '45px',
+          height: '45px',
+          borderRadius: '10px',
+          border: '1px solid #444',
+          background: '#242424',
+          color: '#fff',
+          fontSize: '24px',
+          cursor: 'pointer',
+        }}
+      >
+        −
+      </button>
+
+      <div
+        style={{
+          textAlign: 'center',
+          minWidth: '100px',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '22px',
+            fontWeight: '800',
+            color: '#fff',
+          }}
+        >
+          {printingCount}
+        </div>
+
+        <div
+          style={{
+            fontSize: '11px',
+            color: '#777',
+          }}
+        >
+          pages
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={() =>
+          setPrintingCount(printingCount + 1)
+        }
+        style={{
+          width: '45px',
+          height: '45px',
+          borderRadius: '10px',
+          border: '1px solid #444',
+          background: '#242424',
+          color: '#fff',
+          fontSize: '24px',
+          cursor: 'pointer',
+        }}
+      >
+        +
+      </button>
+    </div>
+
+    <div
+      style={{
+        marginTop: '8px',
+        color: '#777',
+        fontSize: '12px',
+      }}
+    >
+      1–99 pages: ₹10/page • 100+ pages: ₹3/page
+    </div>
+  </div>
+)}
+
+{/* PRICE */}
+<div
+  style={{
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '16px 18px',
+    marginBottom: '20px',
+    borderRadius: '12px',
+    background: '#191919',
+    border: '1px solid #292929',
+  }}
+>
+  <span style={{ color: '#999' }}>
+    Service Charge
+  </span>
+
+  <strong
+    style={{
+      color: '#d4af37',
+      fontSize: '20px',
+    }}
+  >
+    {getOrderAmount()
+      ? `₹${getOrderAmount()}`
+      : 'Contact us'}
+  </strong>
+</div>
 
       {/* ACTION BUTTONS */}
       <div
