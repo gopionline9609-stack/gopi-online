@@ -173,96 +173,144 @@ function App() {
 }
 
   return (
-    <div style={styles.loginPage}>
-      <div style={styles.loginCard}>
-        <div style={styles.logoCircle}>G</div>
+  <div style={styles.loginPage}>
 
-        <h1 style={styles.logoTitle}>GOPI ONLINE</h1>
+    {/* Animated Background */}
+    <div style={styles.bgGlow1}></div>
+    <div style={styles.bgGlow2}></div>
+    <div style={styles.bgGlow3}></div>
 
-        <p style={styles.logoSubtitle}>
-          Digital Service & Online Center
-        </p>
+    <div style={styles.loginCard}>
 
-        <div style={styles.tabs}>
-          <button
-            onClick={() => setIsLogin(true)}
-            style={{
-              ...styles.tab,
-              ...(isLogin ? styles.activeTab : {}),
-            }}
-          >
-            Login
-          </button>
+      {/* Logo */}
+      <div style={styles.logoCircle}>
+        <span>G</span>
+      </div>
 
-          <button
-            onClick={() => setIsLogin(false)}
-            style={{
-              ...styles.tab,
-              ...(!isLogin ? styles.activeTab : {}),
-            }}
-          >
-            Register
-          </button>
-        </div>
+      <h1 style={styles.logoTitle}>GOPI ONLINE</h1>
 
-        <form onSubmit={handleSubmit}>
-          {!isLogin && (
+      <p style={styles.logoSubtitle}>
+        Digital Service & Online Center
+      </p>
+
+      {/* Login / Register Tabs */}
+      <div style={styles.tabs}>
+
+        <button
+          type="button"
+          onClick={() => setIsLogin(true)}
+          style={{
+            ...styles.tab,
+            ...(isLogin ? styles.activeTab : {}),
+          }}
+        >
+          LOGIN
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setIsLogin(false)}
+          style={{
+            ...styles.tab,
+            ...(!isLogin ? styles.activeTab : {}),
+          }}
+        >
+          REGISTER
+        </button>
+
+      </div>
+
+      {/* Form */}
+      <form onSubmit={handleSubmit}>
+
+        {!isLogin && (
+          <div style={styles.inputGroup}>
+            <label style={styles.inputLabel}>FULL NAME</label>
+
             <input
               style={styles.input}
               type="text"
-              placeholder="Full Name"
+              placeholder="Enter your full name"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
-          )}
+          </div>
+        )}
+
+        <div style={styles.inputGroup}>
+          <label style={styles.inputLabel}>EMAIL ADDRESS</label>
 
           <input
             style={styles.input}
             type="email"
-            placeholder="Email Address"
+            placeholder="Enter your email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+        </div>
+
+        <div style={styles.inputGroup}>
+          <label style={styles.inputLabel}>PASSWORD</label>
 
           <input
             style={styles.input}
             type="password"
-            placeholder="Password"
+            placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
           />
-
-          <button
-            type="submit"
-            disabled={loading}
-            style={styles.mainButton}
-          >
-            {loading
-              ? 'Please wait...'
-              : isLogin
-              ? 'LOGIN'
-              : 'CREATE ACCOUNT'}
-          </button>
-        </form>
-
-        {message && (
-          <div style={styles.message}>
-            {message}
-          </div>
-        )}
-
-        <div style={styles.contactBox}>
-          <div>📞 9609047478</div>
-          <div>📍 BD SHERPUR, THAKUR PARA</div>
         </div>
+
+        {/* Main Button */}
+        <button
+          type="submit"
+          disabled={loading}
+          style={styles.mainButton}
+        >
+          {loading
+            ? 'PLEASE WAIT...'
+            : isLogin
+            ? 'LOGIN TO ACCOUNT'
+            : 'CREATE ACCOUNT'}
+        </button>
+
+      </form>
+
+      {/* Message */}
+      {message && (
+        <div style={styles.message}>
+          {message}
+        </div>
+      )}
+
+      {/* Contact */}
+      <div style={styles.contactBox}>
+
+        <div style={styles.contactItem}>
+          <span style={styles.contactIcon}>☎</span>
+          <span>9609047478</span>
+        </div>
+
+        <div style={styles.contactItem}>
+          <span style={styles.contactIcon}>⌖</span>
+          <span>BD SHERPUR, THAKUR PARA</span>
+        </div>
+
       </div>
+
+      <div style={styles.bottomText}>
+        © 2026 GOPI ONLINE • All Rights Reserved
+      </div>
+
     </div>
+  </div>
   )
 }
+
 function PaymentPage({ session }) {
   const { orderId } = useParams()
 
@@ -2091,6 +2139,7 @@ function OrdersPage({ session, logout }) {
   )
 }
 function ServicesPage({ session, services, logout }) {
+  const [hoveredService, setHoveredService] = useState(null)
   const [selectedService, setSelectedService] = useState(null)
   const [customerPhone, setCustomerPhone] = useState('')
   const [customerAddress, setCustomerAddress] = useState('')
@@ -2190,251 +2239,443 @@ function ServicesPage({ session, services, logout }) {
   }
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background:
-          'linear-gradient(135deg, #080808 0%, #111111 50%, #080808 100%)',
-        color: '#fff',
-        padding: '30px 18px 60px',
-      }}
-    >
+    <>
       <div
         style={{
-          maxWidth: '1100px',
-          margin: '0 auto',
+          minHeight: '100vh',
+          position: 'relative',
+          background:
+            'radial-gradient(circle at 15% 20%, rgba(0,217,255,0.08), transparent 30%), radial-gradient(circle at 85% 30%, rgba(168,85,247,0.08), transparent 30%), radial-gradient(circle at 50% 90%, rgba(212,175,55,0.07), transparent 35%), linear-gradient(135deg, #050505 0%, #0d0d0d 50%, #050505 100%)',
+          color: '#fff',
+          padding: '30px 18px 60px',
         }}
       >
-
-        {/* HEADER */}
         <div
           style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '15px',
-            flexWrap: 'wrap',
-            marginBottom: '35px',
+            position: 'fixed',
+            inset: 0,
+            pointerEvents: 'none',
+            zIndex: 0,
+            background:
+              'radial-gradient(circle at 15% 20%, rgba(0,217,255,0.10), transparent 28%), radial-gradient(circle at 85% 25%, rgba(168,85,247,0.10), transparent 28%), radial-gradient(circle at 50% 85%, rgba(212,175,55,0.08), transparent 30%)',
+          }}
+        />
+
+        <div
+          style={{
+            maxWidth: '1100px',
+            margin: '0 auto',
+            position: 'relative',
+            zIndex: 1,
           }}
         >
-          <div>
-            <div
-              style={{
-                color: '#d4af37',
-                fontSize: '12px',
-                fontWeight: '700',
-                letterSpacing: '3px',
-                marginBottom: '7px',
-              }}
-            >
-              GOPI ONLINE
-            </div>
-
-            <h1
-              style={{
-                margin: 0,
-                fontSize: '32px',
-                fontWeight: '800',
-              }}
-            >
-              Our Services
-            </h1>
-
-            <p
-              style={{
-                margin: '8px 0 0',
-                color: '#888',
-                fontSize: '14px',
-              }}
-            >
-              Digital services made simple and convenient
-            </p>
-          </div>
-
+          {/* HEADER */}
           <div
             style={{
               display: 'flex',
-              gap: '10px',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '15px',
               flexWrap: 'wrap',
+              marginBottom: '35px',
             }}
           >
-            <button
-              onClick={() => {
-                window.location.href = '/dashboard'
-              }}
-              style={{
-                padding: '11px 18px',
-                borderRadius: '10px',
-                border: '1px solid #444',
-                background: '#171717',
-                color: '#fff',
-                cursor: 'pointer',
-                fontWeight: '600',
-              }}
-            >
-              ← Dashboard
-            </button>
-
-            <button
-              onClick={() => {
-                window.location.href = '/orders'
-              }}
-              style={{
-                padding: '11px 18px',
-                borderRadius: '10px',
-                border: '1px solid #444',
-                background: '#171717',
-                color: '#fff',
-                cursor: 'pointer',
-                fontWeight: '600',
-              }}
-            >
-              My Orders
-            </button>
-
-            <button
-              onClick={logout}
-              style={{
-                padding: '11px 18px',
-                borderRadius: '10px',
-                border: '1px solid #444',
-                background: '#171717',
-                color: '#fff',
-                cursor: 'pointer',
-                fontWeight: '600',
-              }}
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-
-        {/* SERVICE GRID */}
-        {services.length === 0 ? (
-          <div
-            style={{
-              background: '#121212',
-              border: '1px solid #292929',
-              borderRadius: '16px',
-              padding: '50px 20px',
-              textAlign: 'center',
-              color: '#888',
-            }}
-          >
-            No services available right now.
-          </div>
-        ) : (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns:
-                'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: '18px',
-            }}
-          >
-            {services.map((service) => (
+            <div>
               <div
-                key={service.id}
                 style={{
+                  color: '#d4af37',
+                  fontSize: '12px',
+                  fontWeight: '700',
+                  letterSpacing: '3px',
+                  marginBottom: '7px',
+                }}
+              >
+                GOPI ONLINE
+              </div>
+
+              <h1
+                style={{
+                  margin: 0,
+                  fontSize: '32px',
+                  fontWeight: '800',
+                }}
+              >
+                Our Services
+              </h1>
+
+              <p
+                style={{
+                  margin: '8px 0 0',
+                  color: '#888',
+                  fontSize: '14px',
+                }}
+              >
+                Digital services made simple and convenient
+              </p>
+            </div>
+
+            <div
+              style={{
+                display: 'flex',
+                gap: '10px',
+                flexWrap: 'wrap',
+              }}
+            >
+              <button
+                onClick={() => {
+                  window.location.href = '/dashboard'
+                }}
+                style={{
+                  padding: '11px 18px',
+                  borderRadius: '10px',
+                  border: '1px solid #444',
+                  background: '#171717',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                }}
+              >
+                ← Dashboard
+              </button>
+
+              <button
+                onClick={() => {
+                  window.location.href = '/orders'
+                }}
+                style={{
+                  padding: '11px 18px',
+                  borderRadius: '10px',
+                  border: '1px solid #444',
+                  background: '#171717',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                }}
+              >
+                My Orders
+              </button>
+
+              <button
+                onClick={logout}
+                style={{
+                  padding: '11px 18px',
+                  borderRadius: '10px',
+                  border: '1px solid #444',
+                  background: '#171717',
+                  color: '#fff',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                }}
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+
+          {/* SERVICE GRID */}
+          {services.length === 0 ? (
+            <div
+              style={{
+                background: '#121212',
+                border: '1px solid #292929',
+                borderRadius: '16px',
+                padding: '50px 20px',
+                textAlign: 'center',
+                color: '#888',
+              }}
+            >
+              No services available right now.
+            </div>
+          ) : (
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+                gap: '18px',
+              }}
+            >
+              {services.map((service, index) => {
+                const colors = [
+                  '#00d9ff',
+                  '#a855f7',
+                  '#00ff88',
+                  '#ffb000',
+                  '#ff4fd8',
+                  '#4f7cff',
+                ]
+
+                const glow = colors[index % colors.length]
+
+                return (
+                  <div
+                    key={service.id}
+                    onMouseEnter={() => setHoveredService(service.id)}
+                    onMouseLeave={() => setHoveredService(null)}
+                    style={{
+                      position: 'relative',
+                      overflow: 'hidden',
+                      background:
+                        'linear-gradient(145deg, rgba(22,22,22,0.96), rgba(8,8,8,0.98))',
+                      border:
+                        hoveredService === service.id
+                          ? `1px solid ${glow}`
+                          : '1px solid #292929',
+                      borderRadius: '20px',
+                      padding: '25px',
+                      minHeight: '280px',
+                      transition:
+                        'transform 0.35s ease, box-shadow 0.35s ease, border 0.35s ease',
+                      transform:
+                        hoveredService === service.id
+                          ? 'translateY(-8px)'
+                          : 'translateY(0)',
+                      boxShadow:
+                        hoveredService === service.id
+                          ? `0 0 12px ${glow}88, 0 0 40px ${glow}33, 0 18px 50px rgba(0,0,0,0.55)`
+                          : '0 8px 25px rgba(0,0,0,0.25)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: '12%',
+                        width: '76%',
+                        height: '2px',
+                        background: glow,
+                        boxShadow: `0 0 15px ${glow}`,
+                        opacity: hoveredService === service.id ? 1 : 0.35,
+                        transition: '0.35s',
+                      }}
+                    />
+
+                    <div
+                      style={{
+                        width: '62px',
+                        height: '62px',
+                        borderRadius: '18px',
+                        background: `${glow}12`,
+                        border: `1px solid ${glow}66`,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontSize: '30px',
+                        marginBottom: '20px',
+                        boxShadow:
+                          hoveredService === service.id
+                            ? `0 0 25px ${glow}66`
+                            : `0 0 12px ${glow}22`,
+                        transform:
+                          hoveredService === service.id
+                            ? 'scale(1.08) rotate(2deg)'
+                            : 'scale(1)',
+                        transition: '0.35s',
+                      }}
+                    >
+                      {getIcon(service.name)}
+                    </div>
+
+                    <h2
+                      style={{
+                        fontSize: '19px',
+                        margin: '0 0 10px',
+                        lineHeight: '1.4',
+                        color: '#fff',
+                        fontWeight: '800',
+                      }}
+                    >
+                      {service.name}
+                    </h2>
+
+                    <p
+                      style={{
+                        color: '#c8d0df',
+                        fontSize: '13px',
+                        minHeight: '58px',
+                        margin: '0 0 18px',
+                        lineHeight: '1.65',
+                      }}
+                    >
+                      {service.name === 'Xerox' &&
+                        'Fast, reliable and secure document copying services for your needs.'}
+
+                      {service.name === 'Printing' &&
+                        'Print, scan and document services at your convenience.'}
+
+                      {service.name === 'Online Form Fill-up' &&
+                        'Fill up forms, applications and online submissions.'}
+
+                      {service.name === 'Passport Size Photo' &&
+                        'Photo editing, resizing and printing services.'}
+
+                      {service.name === 'Voter Card Application Assistance' &&
+                        'ID card, certificate and document services.'}
+
+                      {service.name === 'PAN Card Application Assistance' &&
+                        'PAN card application and document assistance.'}
+                    </p>
+
+                    <div
+                      style={{
+                        height: '1px',
+                        background: `linear-gradient(90deg, ${glow}88, transparent)`,
+                        marginBottom: '20px',
+                      }}
+                    />
+
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        gap: '12px',
+                      }}
+                    >
+                      <div>
+                        <div
+                          style={{
+                            color: '#666',
+                            fontSize: '10px',
+                            fontWeight: '700',
+                            letterSpacing: '1.5px',
+                            marginBottom: '4px',
+                          }}
+                        >
+                          STARTING FROM
+                        </div>
+
+                        <div
+                          style={{
+                            color: glow,
+                            fontSize: '23px',
+                            fontWeight: '900',
+                            textShadow:
+                              hoveredService === service.id
+                                ? `0 0 12px ${glow}`
+                                : 'none',
+                            transition: '0.3s',
+                          }}
+                        >
+                          ₹{service.price}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => setSelectedService(service)}
+                        style={{
+                          padding: '12px 17px',
+                          borderRadius: '12px',
+                          border: `1px solid ${glow}`,
+                          background:
+                            hoveredService === service.id ? glow : `${glow}18`,
+                          color: hoveredService === service.id ? '#050505' : '#fff',
+                          fontWeight: '900',
+                          cursor: 'pointer',
+                          letterSpacing: '0.4px',
+                          boxShadow:
+                            hoveredService === service.id
+                              ? `0 0 20px ${glow}88`
+                              : `0 0 8px ${glow}22`,
+                          transition: '0.3s',
+                        }}
+                      >
+                        ORDER NOW →
+                      </button>
+                    </div>
+                  </div>
+                )
+              })}
+
+              <div
+                style={{
+                  gridColumn: '3 / span 2',
+                  minHeight: '330px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  textAlign: 'center',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  borderRadius: '20px',
                   background:
-                    'linear-gradient(145deg, #161616, #101010)',
-                  border: '1px solid #292929',
-                  borderRadius: '17px',
-                  padding: '24px',
-                  transition: '0.2s',
-                  boxShadow: '0 8px 25px rgba(0,0,0,0.2)',
+                    'radial-gradient(circle at 50% 35%, rgba(0,217,255,0.10), transparent 35%), linear-gradient(145deg, rgba(7,18,40,0.95), rgba(5,8,25,0.98))',
                 }}
               >
                 <div
                   style={{
-                    width: '55px',
-                    height: '55px',
-                    borderRadius: '14px',
-                    background: '#1d1d1d',
-                    border: '1px solid #333',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '28px',
-                    marginBottom: '18px',
+                    position: 'absolute',
+                    width: '180px',
+                    height: '180px',
+                    borderRadius: '50%',
+                    background:
+                      'radial-gradient(circle, rgba(0,217,255,0.18), transparent 65%)',
+                    top: '10%',
+                    left: '35%',
+                    filter: 'blur(10px)',
                   }}
-                >
-                  {getIcon(service.name)}
-                </div>
+                />
 
-                <h2
-                  style={{
-                    fontSize: '18px',
-                    margin: '0 0 10px',
-                    lineHeight: '1.35',
-                  }}
-                >
-                  {service.name}
-                </h2>
-
-                <p
-                  style={{
-                    color: '#777',
-                    fontSize: '13px',
-                    minHeight: '38px',
-                    margin: '0 0 18px',
-                    lineHeight: '1.5',
-                  }}
-                >
-                  Professional online service assistance.
-                </p>
-
-                <div
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    gap: '10px',
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        color: '#777',
-                        fontSize: '11px',
-                        marginBottom: '3px',
-                      }}
-                    >
-                      STARTING FROM
-                    </div>
-
-                    <div
-                      style={{
-                        color: '#d4af37',
-                        fontSize: '22px',
-                        fontWeight: '800',
-                      }}
-                    >
-                      ₹{service.price}
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => setSelectedService(service)}
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <div
                     style={{
-                      padding: '11px 16px',
-                      borderRadius: '10px',
-                      border: 'none',
-                      background: '#d4af37',
-                      color: '#111',
-                      fontWeight: '800',
-                      cursor: 'pointer',
+                      width: '58px',
+                      height: '58px',
+                      margin: '0 auto 18px',
+                      borderRadius: '50%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '28px',
+                      background:
+                        'linear-gradient(145deg, #075cff, #092d75)',
+                      border: '1px solid #198cff',
+                      boxShadow: '0 0 25px rgba(0,140,255,0.65)',
                     }}
                   >
-                    ORDER NOW
-                  </button>
+                    ⚡
+                  </div>
+
+                  <h2
+                    style={{
+                      margin: 0,
+                      fontSize: '28px',
+                      fontWeight: '900',
+                      color: '#fff',
+                    }}
+                  >
+                    Your One Stop
+                  </h2>
+
+                  <h2
+                    style={{
+                      margin: '5px 0 15px',
+                      fontSize: '28px',
+                      fontWeight: '900',
+                      background:
+                        'linear-gradient(90deg, #00d9ff, #7b2cff)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                    }}
+                  >
+                    Digital Solution
+                  </h2>
+
+                  <p
+                    style={{
+                      margin: 0,
+                      color: '#b8c4d8',
+                      fontSize: '14px',
+                      letterSpacing: '0.5px',
+                    }}
+                  >
+                    Save time&nbsp; • &nbsp;Get it done&nbsp; • &nbsp;Stay ahead
+                  </p>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          )}
 
-        {/* ORDER MODAL */}
+          {/* ORDER MODAL */}
         {selectedService && (
           <div
             style={{
@@ -2542,25 +2783,79 @@ function ServicesPage({ session, services, logout }) {
               />
 
               {/* XEROX */}
-              {selectedService.name === 'Xerox' && (
-                <>
-                  <label style={styles.formLabel}>
-                    Number of Copies
-                  </label>
+{selectedService.name === 'Xerox' && (
+  <>
+    <label style={styles.formLabel}>
+      Number of Copies
+    </label>
 
-                  <input
-                    type="number"
-                    min="1"
-                    value={quantity}
-                    onChange={(e) =>
-                      setQuantity(
-                        Math.max(1, Number(e.target.value))
-                      )
-                    }
-                    style={styles.input}
-                  />
-                </>
-              )}
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        background: '#0d0d0d',
+        border: '1px solid #292929',
+        borderRadius: '12px',
+        overflow: 'hidden',
+        height: '58px',
+      }}
+    >
+      {/* MINUS */}
+      <button
+        type="button"
+        onClick={() =>
+          setQuantity((prev) => Math.max(1, prev - 1))
+        }
+        style={{
+          width: '65px',
+          height: '100%',
+          border: 'none',
+          background: '#1d1d1d',
+          color: '#d4af37',
+          fontSize: '28px',
+          fontWeight: '800',
+          cursor: 'pointer',
+        }}
+      >
+        −
+      </button>
+
+      {/* QUANTITY */}
+      <div
+        style={{
+          flex: 1,
+          textAlign: 'center',
+          color: '#fff',
+          fontSize: '20px',
+          fontWeight: '800',
+        }}
+      >
+        {quantity}
+      </div>
+
+      {/* PLUS */}
+      <button
+        type="button"
+        onClick={() =>
+          setQuantity((prev) => prev + 1)
+        }
+        style={{
+          width: '65px',
+          height: '100%',
+          border: 'none',
+          background: '#1d1d1d',
+          color: '#d4af37',
+          fontSize: '28px',
+          fontWeight: '800',
+          cursor: 'pointer',
+        }}
+      >
+        +
+      </button>
+    </div>
+  </>
+)}
 
               {/* PHOTO */}
               {selectedService.name === 'Passport Size Photo' && (
@@ -2675,8 +2970,10 @@ function ServicesPage({ session, services, logout }) {
         )}
       </div>
     </div>
+    </>
   )
 }
+
 function Dashboard({ session, services, logout }) {
 
   const [paymentOrder, setPaymentOrder] = useState(null)
@@ -2841,8 +3138,559 @@ const createOrder = async () => {
   setPaymentOrder(order)
   setPaymentLoading(false)
 }
-  return (
- 
+
+ return (
+  <>
+    <style>{`
+    @keyframes headerAppear {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes logoGlow {
+  0%, 100% {
+    text-shadow:
+      0 0 10px rgba(60,180,255,0.45),
+      0 0 25px rgba(0,110,255,0.25);
+  }
+
+  50% {
+    text-shadow:
+      0 0 18px rgba(60,210,255,0.9),
+      0 0 40px rgba(0,130,255,0.5);
+  }
+}
+
+@keyframes iconPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 20px rgba(0,150,255,0.25);
+  }
+
+  50% {
+    transform: scale(1.06);
+    box-shadow:
+      0 0 32px rgba(0,180,255,0.55);
+  }
+}
+
+@keyframes buttonGlow {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(0,160,255,0.35),
+      0 12px 30px rgba(0,80,220,0.25);
+  }
+
+  50% {
+    box-shadow:
+      0 0 38px rgba(0,190,255,0.65),
+      0 15px 40px rgba(0,80,220,0.35);
+  }
+}
+  .infoCard:hover {
+  transform: translateY(-8px);
+  border-color: rgba(50,190,255,0.75);
+  box-shadow:
+    0 25px 55px rgba(0,0,0,0.45),
+    0 0 35px rgba(0,140,255,0.2);
+}
+
+button:hover {
+  filter: brightness(1.12);
+}
+
+button:active {
+  transform: scale(0.97);
+}
+      @keyframes dashboardHeroIn {
+        from {
+          opacity: 0;
+          transform: translateY(30px) scale(0.98);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes heroGlowFloat {
+        0%, 100% {
+          transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+          transform: translate(35px, -25px) scale(1.12);
+        }
+      }
+
+      @keyframes heroCenterGlow {
+        0%, 100% {
+          transform: scale(0.85);
+          opacity: 0.12;
+        }
+
+        50% {
+          transform: scale(1.25);
+          opacity: 0.25;
+        }
+      }
+
+      @keyframes particleFloat {
+        0%, 100% {
+          transform: translateY(0) scale(1);
+          opacity: 0.45;
+        }
+
+        50% {
+          transform: translateY(-25px) scale(1.25);
+          opacity: 1;
+        }
+      }
+
+      @keyframes waveMove {
+        0%, 100% {
+          transform: translateX(0) rotate(-5deg);
+        }
+
+        50% {
+          transform: translateX(35px) rotate(-3deg);
+        }
+      }
+
+      @keyframes waveMoveReverse {
+        0%, 100% {
+          transform: translateX(0) rotate(4deg);
+        }
+
+        50% {
+          transform: translateX(-40px) rotate(6deg);
+        }
+      }
+
+      @keyframes titleReveal {
+        from {
+          opacity: 0;
+          transform: translateY(25px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes textReveal {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes buttonGlow {
+        0%, 100% {
+          box-shadow: 0 12px 35px rgba(0,120,255,0.30);
+        }
+
+        50% {
+          box-shadow: 0 12px 45px rgba(0,170,255,0.55);
+        }
+      }
+        /* ========================================= */
+/*        GOPI ONLINE MOBILE ONLY            */
+/* ========================================= */
+
+@media (max-width: 768px) {
+
+  /* ================= HEADER ================= */
+
+  .dashboard-header-mobile {
+    padding: 12px 12px !important;
+    min-height: 76px !important;
+    box-sizing: border-box !important;
+    border-radius: 0 0 24px 24px !important;
+  }
+
+  .dashboard-header-mobile > div:first-child {
+    min-width: 0 !important;
+  }
+
+  .dashboard-header-logo-mobile {
+    font-size: 19px !important;
+    letter-spacing: 1.5px !important;
+    white-space: nowrap !important;
+  }
+
+  .dashboard-header-sub-mobile {
+    font-size: 9px !important;
+    letter-spacing: 0.5px !important;
+    white-space: nowrap !important;
+  }
+
+  .dashboard-header-right-mobile {
+    gap: 6px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .dashboard-welcome-mobile {
+    display: block !important;
+    font-size: 10px !important;
+    white-space: nowrap !important;
+  }
+
+  .dashboard-header-mobile button {
+    padding: 9px 11px !important;
+    font-size: 10px !important;
+  }
+
+
+  /* ================= HERO ================= */
+
+  .dashboard-hero-mobile {
+    margin: 14px !important;
+    padding: 38px 18px 32px !important;
+    min-height: 0 !important;
+    box-sizing: border-box !important;
+    border-radius: 25px !important;
+    overflow: hidden !important;
+  }
+
+  .dashboard-hero-mobile > div:first-child {
+    position: relative !important;
+    z-index: 20 !important;
+  }
+
+  .dashboard-hero-title-mobile {
+    font-size: 34px !important;
+    line-height: 1.08 !important;
+    letter-spacing: -1px !important;
+    text-align: center !important;
+  }
+
+  .dashboard-hero-mobile p {
+    font-size: 13px !important;
+    line-height: 1.6 !important;
+  }
+
+  .dashboard-hero-buttons-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 12px !important;
+  }
+
+  .dashboard-hero-buttons-mobile button {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+
+  /* ================= INFO CARDS ================= */
+
+  .dashboard-info-section-mobile {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 10px 14px 25px !important;
+    gap: 14px !important;
+  }
+
+  .dashboard-info-card-mobile {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+
+  /* ================= FOOTER ================= */
+
+  .dashboard-footer-mobile {
+    padding: 25px 15px !important;
+    text-align: center !important;
+  }
+}
+
+
+/* ========================================= */
+/*             SMALL PHONES                  */
+/* ========================================= */
+
+@media (max-width: 400px) {
+
+  .dashboard-header-mobile {
+    padding: 10px !important;
+  }
+
+  .dashboard-header-logo-mobile {
+    font-size: 17px !important;
+  }
+
+  .dashboard-header-sub-mobile {
+    font-size: 8px !important;
+  }
+
+  .dashboard-welcome-mobile {
+    font-size: 9px !important;
+  }
+
+  .dashboard-header-mobile button {
+    padding: 8px 9px !important;
+    font-size: 10px !important;
+  }
+
+  .dashboard-hero-mobile {
+    margin: 10px !important;
+    padding: 30px 15px 28px !important;
+  }
+
+  .dashboard-hero-title-mobile {
+    font-size: 29px !important;
+  }
+
+  .dashboard-hero-mobile p {
+    font-size: 12px !important;
+  }
+}
+  /* ========================================= */
+/*     MOBILE FLOATING PARTICLES + GLOW      */
+/* ========================================= */
+
+@media (max-width: 768px) {
+
+  .dashboard-hero-mobile {
+    position: relative !important;
+    overflow: hidden !important;
+    box-shadow:
+      0 0 25px rgba(0, 130, 255, 0.12),
+      inset 0 0 45px rgba(0, 100, 255, 0.08) !important;
+  }
+
+  /* Floating blue particle field */
+  .dashboard-hero-mobile::before {
+    content: "" !important;
+    position: absolute !important;
+    inset: -20px !important;
+    pointer-events: none !important;
+    z-index: 1 !important;
+
+    background-image:
+      radial-gradient(circle, rgba(0, 190, 255, 0.9) 0 2px, transparent 3px),
+      radial-gradient(circle, rgba(40, 130, 255, 0.8) 0 1.5px, transparent 3px),
+      radial-gradient(circle, rgba(0, 220, 255, 0.7) 0 2px, transparent 3px),
+      radial-gradient(circle, rgba(80, 160, 255, 0.7) 0 1px, transparent 3px);
+
+    background-size:
+      110px 150px,
+      170px 190px,
+      210px 230px,
+      140px 210px;
+
+    background-position:
+      20px 30px,
+      80px 100px,
+      150px 40px,
+      40px 160px;
+
+    opacity: 0.45;
+
+    animation: mobileParticleDrift 10s linear infinite;
+  }
+
+
+  /* Blue atmospheric glow */
+  .dashboard-hero-mobile::after {
+    content: "" !important;
+    position: absolute !important;
+    width: 260px !important;
+    height: 260px !important;
+    left: 50% !important;
+    top: 45% !important;
+    transform: translate(-50%, -50%) !important;
+    border-radius: 50% !important;
+    pointer-events: none !important;
+    z-index: 2 !important;
+
+    background: radial-gradient(
+      circle,
+      rgba(0, 170, 255, 0.20) 0%,
+      rgba(0, 100, 255, 0.10) 35%,
+      transparent 70%
+    );
+
+    filter: blur(15px);
+
+    animation: mobileCenterGlow 5s ease-in-out infinite;
+  }
+
+
+  /* Keep Hero content above particles */
+  .dashboard-hero-mobile > div {
+    position: relative !important;
+    z-index: 10 !important;
+  }
+}
+
+
+/* Particle movement */
+@keyframes mobileParticleDrift {
+
+  0% {
+    background-position:
+      20px 30px,
+      80px 100px,
+      150px 40px,
+      40px 160px;
+  }
+
+  50% {
+    background-position:
+      35px 0px,
+      55px 70px,
+      180px 75px,
+      20px 120px;
+  }
+
+  100% {
+    background-position:
+      20px 30px,
+      80px 100px,
+      150px 40px,
+      40px 160px;
+  }
+}
+
+
+/* Center glow breathing */
+@keyframes mobileCenterGlow {
+
+  0%, 100% {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) scale(0.85);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+}
+  /* ========================================= */
+/*       MOBILE HERO NEON WAVE EFFECT        */
+/* ========================================= */
+
+@media (max-width: 768px) {
+
+  .dashboard-hero-mobile {
+    box-shadow:
+      0 0 25px rgba(0, 130, 255, 0.16),
+      0 0 60px rgba(0, 90, 255, 0.08),
+      inset 0 0 45px rgba(0, 110, 255, 0.08) !important;
+  }
+
+  /* Animated cyan wave */
+  .dashboard-hero-mobile .hero-wave-mobile {
+    position: absolute !important;
+    left: -15% !important;
+    bottom: 35px !important;
+    width: 130% !important;
+    height: 75px !important;
+    border-top: 2px solid rgba(0, 190, 255, 0.55) !important;
+    border-radius: 50% !important;
+    transform: rotate(-4deg) !important;
+    pointer-events: none !important;
+    z-index: 5 !important;
+    box-shadow:
+      0 -4px 18px rgba(0, 180, 255, 0.25) !important;
+
+    animation: mobileWaveMove 5s ease-in-out infinite !important;
+  }
+
+  .dashboard-hero-mobile .hero-wave-mobile::after {
+    content: "" !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 12px !important;
+    width: 100% !important;
+    height: 55px !important;
+    border-top: 1px solid rgba(30, 120, 255, 0.45) !important;
+    border-radius: 50% !important;
+
+    animation: mobileWaveMoveReverse 7s ease-in-out infinite !important;
+  }
+
+  /* Stronger animated hero border */
+  .dashboard-hero-mobile {
+    animation:
+      dashboardHeroIn 0.8s ease-out,
+      mobileHeroBorderGlow 4s ease-in-out infinite !important;
+  }
+}
+
+
+/* Wave movement */
+@keyframes mobileWaveMove {
+
+  0%, 100% {
+    transform: translateX(0) rotate(-4deg);
+  }
+
+  50% {
+    transform: translateX(28px) rotate(-2deg);
+  }
+}
+
+
+@keyframes mobileWaveMoveReverse {
+
+  0%, 100% {
+    transform: translateX(0) rotate(3deg);
+  }
+
+  50% {
+    transform: translateX(-30px) rotate(5deg);
+  }
+}
+
+
+/* Border breathing glow */
+@keyframes mobileHeroBorderGlow {
+
+  0%, 100% {
+    border-color: rgba(40, 150, 255, 0.30);
+    box-shadow:
+      0 0 25px rgba(0, 130, 255, 0.12),
+      0 0 55px rgba(0, 90, 255, 0.06),
+      inset 0 0 40px rgba(0, 100, 255, 0.06);
+  }
+
+  50% {
+    border-color: rgba(40, 200, 255, 0.60);
+    box-shadow:
+      0 0 35px rgba(0, 170, 255, 0.25),
+      0 0 75px rgba(0, 100, 255, 0.12),
+      inset 0 0 55px rgba(0, 140, 255, 0.10);
+  }
+}
+
+
+    `}</style>
+
     <div style={styles.dashboardPage}>
 
       {/* HEADER */}
@@ -2867,9 +3715,12 @@ const createOrder = async () => {
       position: 'relative',
     }}
   >
-    <span style={styles.welcome}>
-      Hi, {customerName}
-    </span>
+    <span
+  className="dashboard-welcome-mobile"
+  style={styles.welcome}
+>
+  Hi, {customerName}
+</span>
 
     {/* NOTIFICATION BUTTON */}
     <button
@@ -2891,19 +3742,23 @@ const createOrder = async () => {
   setShowNotifications(!showNotifications)
 }}
       style={{
-        width: '42px',
-        height: '42px',
-        borderRadius: '12px',
-        border: '1px solid #333',
-        background: '#171717',
-        color: '#d4af37',
-        fontSize: '20px',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        position: 'relative',
-      }}
+  width: '44px',
+  height: '44px',
+  borderRadius: '14px',
+  border: '1px solid rgba(56,167,255,0.35)',
+  background:
+    'linear-gradient(145deg, rgba(18,65,120,0.55), rgba(3,15,30,0.85))',
+  color: '#58b7ff',
+  fontSize: '20px',
+  cursor: 'pointer',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'relative',
+  boxShadow:
+    '0 8px 25px rgba(0,110,255,0.15), inset 0 0 15px rgba(50,150,255,0.05)',
+  transition: 'all 0.3s ease',
+}}
       title="Notifications"
     >
       🔔
@@ -2919,8 +3774,8 @@ const createOrder = async () => {
             height: '18px',
             padding: '0 4px',
             borderRadius: '10px',
-            background: '#d4af37',
-            color: '#111',
+            background: 'linear-gradient(135deg, #38bdf8, #2563eb)',
+color: '#ffffff',
             fontSize: '10px',
             fontWeight: '900',
             display: 'flex',
@@ -2943,10 +3798,11 @@ const createOrder = async () => {
           right: '55px',
           width: '340px',
           maxWidth: 'calc(100vw - 30px)',
-          background: '#151515',
-          border: '1px solid #303030',
+          background: 'rgba(5,18,36,0.96)',
+border: '1px solid rgba(56,167,255,0.22)',
           borderRadius: '16px',
-          boxShadow: '0 18px 45px rgba(0,0,0,0.45)',
+         boxShadow:
+  '0 20px 60px rgba(0,0,0,0.55), 0 0 35px rgba(0,110,255,0.12)',
           zIndex: 1000,
           overflow: 'hidden',
         }}
@@ -3174,51 +4030,158 @@ const createOrder = async () => {
 </header>
 
       {/* HERO */}
-      <section className="dashboard-hero-mobile" 
-        style={styles.hero}>
-        <div>
-          <p style={styles.smallGold}>
-            WELCOME TO GOPI ONLINE
-          </p>
-
-          <h1 
-          className="dashboard-hero-title-mobile"
-          style={styles.heroTitle}>
-            Your Digital Services,
-            <br />
-            <span>Simple & Fast.</span>
-          </h1>
-
-          <p style={styles.heroText}>
-            PAN, Voter Card, Online Forms, Xerox,
-            Photo & Printing services — all in one place.
-          </p>
-
-         <div
-  className="dashboard-hero-buttons-mobile"
-  style={styles.heroButtons}
+<section
+  className="dashboard-hero-mobile"
+  style={styles.hero}
 >
-  <button
-    onClick={() => {
-      window.location.href = '/services'
-    }}
-    style={styles.mainButton}
-  >
-    Explore Services
-  </button>
-  <button
-    onClick={() => {
-      window.location.href = '/orders'
-    }}
-    style={styles.secondaryButton}
-  >
-    My Orders
-  </button>
-</div>
-</div>
+  {/* Animated background glow */}
+  <div style={styles.heroGlowOne}></div>
+  <div style={styles.heroGlowTwo}></div>
+  <div style={styles.heroGlowThree}></div>
+
+  {/* Floating particles */}
+  <span style={{ ...styles.heroParticle, ...styles.particle1 }}>✦</span>
+  <span style={{ ...styles.heroParticle, ...styles.particle2 }}>•</span>
+  <span style={{ ...styles.heroParticle, ...styles.particle3 }}>✦</span>
+  <span style={{ ...styles.heroParticle, ...styles.particle4 }}>•</span>
+  <span style={{ ...styles.heroParticle, ...styles.particle5 }}>✦</span>
+
+  {/* Floating service icons */}
+  <div style={styles.floatingCard}>
+    <div style={styles.floatingCardIcon}>▣</div>
+    <div style={styles.floatingCardLine}></div>
+    <div style={styles.floatingCardLineSmall}></div>
+  </div>
+
+  <div style={styles.floatingPrinter}>
+    <div style={styles.printerIcon}>▤</div>
+  </div>
+
+  {/* Animated light waves */}
+  <div style={styles.lightWaveOne}></div>
+  <div style={styles.lightWaveTwo}></div>
+
+  {/* HERO CONTENT */}
+  <div style={styles.heroContent}>
+
+    <p style={styles.smallGold}>
+      ✦ &nbsp; WELCOME TO GOPI ONLINE &nbsp; ✦
+    </p>
+
+    <h1
+      className="dashboard-hero-title-mobile"
+      style={styles.heroTitle}
+    >
+      Your Digital Services,
+      <br />
+      <span style={styles.heroHighlight}>
+        Simple & Fast.
+      </span>
+    </h1>
+
+    <p style={styles.heroText}>
+      PAN, Voter Card, Online Forms, Xerox,
+      Photo & Printing services — all in one place.
+    </p>
+
+    <div
+      className="dashboard-hero-buttons-mobile"
+      style={styles.heroButtons}
+    >
+      <button
+        onClick={() => {
+          window.location.href = '/services'
+        }}
+        style={styles.heroPrimaryButton}
+      >
+        ✦ &nbsp; Explore Services
+      </button>
+
+      <button
+        onClick={() => {
+          window.location.href = '/orders'
+        }}
+        style={styles.heroSecondaryButton}
+      >
+        ▣ &nbsp; My Orders
+      </button>
+    </div>
+
+  </div>
+  <div className="hero-wave-mobile"></div>
 </section>
+{/* INFORMATION CARDS */}
+<section
+  className="dashboard-info-section-mobile"
+  style={styles.infoSection}
+>
+
+  {/* NEED HELP */}
+  <div
+    className="dashboard-info-card-mobile"
+    style={styles.infoCard}
+  >
+    <div style={styles.infoIcon}>
+      📞
+    </div>
+
+    <div>
+      <h3 style={styles.infoTitle}>
+        Need Help?
+      </h3>
+
+      <p style={styles.infoText}>
+        Call us at{' '}
+        <strong style={styles.infoHighlight}>
+          9609047478
+        </strong>
+      </p>
+    </div>
+  </div>
 
 
+  {/* VISIT US */}
+  <div
+    className="dashboard-info-card-mobile"
+    style={styles.infoCard}
+  >
+    <div style={styles.infoIcon}>
+      📍
+    </div>
+
+    <div>
+      <h3 style={styles.infoTitle}>
+        Visit Us
+      </h3>
+
+      <p style={styles.infoText}>
+        BD SHERPUR, THAKUR PARA
+      </p>
+    </div>
+  </div>
+
+
+  {/* EASY PAYMENT */}
+  <div
+    className="dashboard-info-card-mobile"
+    style={styles.infoCard}
+  >
+    <div style={styles.infoIcon}>
+      💳
+    </div>
+
+    <div>
+      <h3 style={styles.infoTitle}>
+        Easy Payment
+      </h3>
+
+      <p style={styles.infoText}>
+        Google Pay Available
+      </p>
+    </div>
+  </div>
+
+</section>
       
 {/* ORDER FORM */}
 {selectedService && !paymentOrder && (
@@ -4035,48 +4998,23 @@ if (orderError) {
     </div>
   </section>
 )}
-      {/* INFO */}
-      <section 
-      className="info-section-mobile"
-      style={styles.infoSection}>
-        <div style={styles.infoCard}>
-          <div style={styles.infoIcon}>📞</div>
 
-          <div>
-            <h3>Need Help?</h3>
-            <p>Call us at 9609047478</p>
-          </div>
-        </div>
+  <section style={styles.infoSection}>
+    {/* Intentionally empty section */}
+  </section>
 
-        <div style={styles.infoCard}>
-          <div style={styles.infoIcon}>📍</div>
-
-          <div>
-            <h3>Visit Us</h3>
-            <p>BD SHERPUR, THAKUR PARA</p>
-          </div>
-        </div>
-
-        <div style={styles.infoCard}>
-          <div style={styles.infoIcon}>💳</div>
-
-          <div>
-            <h3>Easy Payment</h3>
-            <p>Google Pay Available</p>
-          </div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer 
-      className="footer-mobile"
-      style={styles.footer}>
-        <strong>GOPI ONLINE</strong>
-        <span>
-  © {new Date().getFullYear()} GOPI ONLINE. Digital Service Center.
-</span>
-      </footer>
-    </div>
+  {/* FOOTER */}
+  <footer
+    className="footer-mobile"
+    style={styles.footer}
+  >
+    <strong>GOPI ONLINE</strong>
+    <span>
+      © {new Date().getFullYear()} GOPI ONLINE. Digital Service Center.
+    </span>
+  </footer>
+</div>
+</>
   )
 }
 function formatDateTime(dateString) {
@@ -4243,362 +5181,921 @@ const responsiveCSS = `
     }
   }
 `
+if (typeof document !== 'undefined') {
+  const style = document.createElement('style')
+
+  style.innerHTML = `
+    @keyframes cardAppear {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @keyframes logoPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow:
+          0 0 30px rgba(0,140,255,0.45),
+          inset 0 0 20px rgba(255,255,255,0.08);
+      }
+
+      50% {
+        transform: scale(1.06);
+        box-shadow:
+          0 0 45px rgba(0,140,255,0.65),
+          inset 0 0 25px rgba(255,255,255,0.12);
+      }
+    }
+
+    @keyframes floatGlow {
+      0%, 100% {
+        transform: translate(0, 0);
+      }
+
+      50% {
+        transform: translate(25px, 30px);
+      }
+    }
+
+    input:focus {
+      border-color: #168cff !important;
+      box-shadow:
+        0 0 0 3px rgba(0,140,255,0.10),
+        0 0 20px rgba(0,140,255,0.12) !important;
+    }
+
+    input::placeholder {
+      color: #50647d;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    @media (max-width: 480px) {
+      .login-card {
+        padding: 30px 20px;
+      }
+    }
+  `
+
+  document.head.appendChild(style)
+}
 const styles = {
-  formLabel: {
-  display: 'block',
-  color: '#d4af37',
+  floatingCard: {
+  position: 'absolute',
+  zIndex: 5,
+  left: '7%',
+  top: '32%',
+  width: '105px',
+  height: '135px',
+  padding: '15px',
+  boxSizing: 'border-box',
+
+  borderRadius: '18px',
+  border: '1px solid rgba(80,180,255,0.45)',
+
+  background:
+    'linear-gradient(145deg, rgba(30,100,220,0.38), rgba(3,25,65,0.72))',
+
+  boxShadow:
+    '0 0 35px rgba(0,120,255,0.25), inset 0 0 20px rgba(50,170,255,0.08)',
+
+  transform: 'rotate(-12deg)',
+  animation: 'floatingCardMove 6s ease-in-out infinite',
+},
+
+floatingCardIcon: {
+  fontSize: '42px',
+  color: '#45baff',
+  textAlign: 'center',
+  textShadow: '0 0 20px rgba(0,170,255,0.7)',
+},
+
+floatingCardLine: {
+  height: '7px',
+  marginTop: '15px',
+  borderRadius: '10px',
+  background: 'rgba(80,180,255,0.5)',
+},
+
+floatingCardLineSmall: {
+  width: '65%',
+  height: '6px',
+  marginTop: '9px',
+  borderRadius: '10px',
+  background: 'rgba(80,180,255,0.3)',
+},
+
+floatingPrinter: {
+  position: 'absolute',
+  zIndex: 5,
+  right: '7%',
+  top: '39%',
+  width: '100px',
+  height: '85px',
+
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+
+  borderRadius: '20px',
+  border: '1px solid rgba(60,190,255,0.4)',
+
+  background:
+    'linear-gradient(145deg, rgba(25,95,190,0.4), rgba(3,22,55,0.75))',
+
+  boxShadow:
+    '0 0 35px rgba(0,140,255,0.22)',
+
+  animation: 'floatingPrinterMove 5s ease-in-out infinite',
+},
+
+printerIcon: {
+  fontSize: '46px',
+  color: '#42c5ff',
+  textShadow: '0 0 20px rgba(0,180,255,0.7)',
+},
+
+lightWaveOne: {
+  position: 'absolute',
+  width: '130%',
+  height: '130px',
+  left: '-15%',
+  bottom: '-35px',
+  borderTop: '3px solid rgba(0,190,255,0.55)',
+  borderRadius: '50%',
+  transform: 'rotate(-5deg)',
+  boxShadow: '0 -8px 30px rgba(0,150,255,0.35)',
+  animation: 'waveMove 6s ease-in-out infinite',
+},
+
+lightWaveTwo: {
+  position: 'absolute',
+  width: '120%',
+  height: '110px',
+  left: '-10%',
+  bottom: '5px',
+  borderTop: '2px solid rgba(37,99,235,0.5)',
+  borderRadius: '50%',
+  transform: 'rotate(4deg)',
+  animation: 'waveMoveReverse 8s ease-in-out infinite',
+},
+ loginPage: {
+  minHeight: '100vh',
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  position: 'relative',
+  overflow: 'hidden',
+  background:
+    'radial-gradient(circle at top, #102a55 0%, #050b16 45%, #02050a 100%)',
+  padding: '20px',
+  boxSizing: 'border-box',
+},
+
+bgGlow1: {
+  position: 'absolute',
+  width: '420px',
+  height: '420px',
+  borderRadius: '50%',
+  background: '#087cff',
+  filter: 'blur(120px)',
+  opacity: 0.18,
+  top: '-180px',
+  left: '-120px',
+  animation: 'floatGlow 8s ease-in-out infinite',
+},
+
+bgGlow2: {
+  position: 'absolute',
+  width: '350px',
+  height: '350px',
+  borderRadius: '50%',
+  background: '#00b7ff',
+  filter: 'blur(120px)',
+  opacity: 0.13,
+  right: '-100px',
+  bottom: '-100px',
+  animation: 'floatGlow 10s ease-in-out infinite reverse',
+},
+
+bgGlow3: {
+  position: 'absolute',
+  width: '180px',
+  height: '180px',
+  borderRadius: '50%',
+  background: '#2563eb',
+  filter: 'blur(90px)',
+  opacity: 0.15,
+  top: '45%',
+  left: '45%',
+},
+
+loginCard: {
+  width: '100%',
+  maxWidth: '430px',
+  position: 'relative',
+  zIndex: 5,
+  padding: '38px 32px',
+  boxSizing: 'border-box',
+  borderRadius: '28px',
+  background: 'rgba(8, 18, 35, 0.78)',
+  border: '1px solid rgba(70, 150, 255, 0.25)',
+  boxShadow:
+    '0 30px 80px rgba(0,0,0,0.55), 0 0 50px rgba(0,110,255,0.12)',
+  backdropFilter: 'blur(25px)',
+  WebkitBackdropFilter: 'blur(25px)',
+  animation: 'cardAppear 0.7s ease-out',
+},
+
+logoCircle: {
+  width: '78px',
+  height: '78px',
+  margin: '0 auto 16px',
+  borderRadius: '50%',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  background:
+    'linear-gradient(135deg, #0ea5ff, #2563eb, #123b9b)',
+  border: '2px solid rgba(255,255,255,0.2)',
+  boxShadow:
+    '0 0 30px rgba(0,140,255,0.45), inset 0 0 20px rgba(255,255,255,0.08)',
+  animation: 'logoPulse 3s ease-in-out infinite',
+},
+
+logoTitle: {
+  margin: '0',
+  textAlign: 'center',
+  fontSize: '30px',
+  fontWeight: '900',
+  letterSpacing: '3px',
+  color: '#ffffff',
+  textShadow: '0 0 25px rgba(0,140,255,0.35)',
+},
+
+logoSubtitle: {
+  textAlign: 'center',
+  margin: '8px 0 28px',
+  color: '#8da9c9',
   fontSize: '13px',
-  fontWeight: 'bold',
+  letterSpacing: '0.5px',
+},
+
+tabs: {
+  display: 'flex',
+  padding: '5px',
+  marginBottom: '25px',
+  borderRadius: '14px',
+  background: 'rgba(0,0,0,0.28)',
+  border: '1px solid rgba(255,255,255,0.06)',
+},
+
+tab: {
+  flex: 1,
+  border: 'none',
+  background: 'transparent',
+  color: '#7187a5',
+  padding: '13px 10px',
+  borderRadius: '10px',
+  fontSize: '13px',
+  fontWeight: '800',
+  letterSpacing: '1px',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+},
+
+activeTab: {
+  background:
+    'linear-gradient(135deg, #087cff, #2563eb)',
+  color: '#ffffff',
+  boxShadow:
+    '0 6px 20px rgba(0,120,255,0.35)',
+},
+
+inputGroup: {
+  marginBottom: '17px',
+},
+
+inputLabel: {
+  display: 'block',
+  color: '#8fa8c7',
+  fontSize: '11px',
+  fontWeight: '800',
+  letterSpacing: '1px',
   marginBottom: '8px',
 },
-  loginPage: {
-    minHeight: '100vh',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    background:
-      'linear-gradient(135deg, #050505, #111111)',
-    padding: '20px',
-    fontFamily: 'Arial, sans-serif',
-  },
 
-  loginCard: {
-    width: '100%',
-    maxWidth: '430px',
-    background: '#111',
-    border: '1px solid #292929',
-    borderRadius: '24px',
-    padding: '35px',
-    boxShadow: '0 25px 70px rgba(0,0,0,.5)',
-  },
+input: {
+  width: '100%',
+  boxSizing: 'border-box',
+  padding: '15px 16px',
+  borderRadius: '13px',
+  border: '1px solid rgba(100,150,210,0.22)',
+  outline: 'none',
+  background: 'rgba(2,8,18,0.65)',
+  color: '#ffffff',
+  fontSize: '14px',
+  transition: 'all 0.3s ease',
+},
 
-  logoCircle: {
-    width: '65px',
-    height: '65px',
-    borderRadius: '50%',
-    background: '#d4af37',
-    color: '#000',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '32px',
-    fontWeight: 'bold',
-    margin: '0 auto 15px',
-  },
+mainButton: {
+  width: '100%',
+  marginTop: '8px',
+  padding: '16px',
+  border: 'none',
+  borderRadius: '14px',
+  background:
+    'linear-gradient(135deg, #008cff, #2563eb, #1d4ed8)',
+  color: '#ffffff',
+  fontSize: '14px',
+  fontWeight: '900',
+  letterSpacing: '1px',
+  cursor:'pointer',
+  boxShadow:
+    '0 12px 30px rgba(0,120,255,0.28)',
+  transition: 'all 0.3s ease',
+},
 
-  logoTitle: {
-    color: '#d4af37',
-    textAlign: 'center',
-    margin: '0',
-    letterSpacing: '2px',
-  },
+message: {
+  marginTop: '18px',
+  padding: '12px 14px',
+  borderRadius: '12px',
+  background: 'rgba(0,120,255,0.08)',
+  border: '1px solid rgba(0,140,255,0.2)',
+  color: '#8fc7ff',
+  fontSize: '13px',
+  textAlign: 'center',
+  lineHeight: '1.5',
+},
 
-  logoSubtitle: {
-    color: '#aaa',
-    textAlign: 'center',
-    marginBottom: '28px',
-  },
+contactBox: {
+  marginTop: '25px',
+  padding: '15px',
+  borderRadius: '15px',
+  background: 'rgba(0,0,0,0.20)',
+  border: '1px solid rgba(100,150,210,0.12)',
+},
 
-  tabs: {
-    display: 'flex',
-    background: '#080808',
-    borderRadius: '12px',
-    padding: '4px',
-    marginBottom: '22px',
-  },
+contactItem: {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '10px',
+  color: '#9eb6d4',
+  fontSize: '12px',
+  marginBottom: '8px',
+},
 
-  tab: {
-    flex: 1,
-    padding: '12px',
-    border: 'none',
-    borderRadius: '9px',
-    background: 'transparent',
-    color: '#aaa',
-    cursor: 'pointer',
-    fontWeight: 'bold',
-  },
+contactIcon: {
+  width: '25px',
+  height: '25px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '8px',
+  background: 'rgba(0,130,255,0.12)',
+  color: '#39a7ff',
+  fontSize: '14px',
+},
 
-  activeTab: {
-    background: '#d4af37',
-    color: '#000',
-  },
+bottomText: {
+  marginTop: '20px',
+  textAlign: 'center',
+  color: '#50647d',
+  fontSize: '10px',
+  letterSpacing: '0.5px',
+},
+dashboardPage: {
+  minHeight: '100vh',
+  background:
+    'radial-gradient(circle at top right, #08295a 0%, #030914 38%, #02050a 100%)',
+  color: '#fff',
+  overflow: 'hidden',
+  position: 'relative',
+},
 
-  input: {
-    width: '100%',
-    boxSizing: 'border-box',
-    padding: '14px',
-    marginBottom: '14px',
-    borderRadius: '10px',
-    border: '1px solid #333',
-    background: '#080808',
-    color: '#fff',
-    outline: 'none',
-    fontSize: '15px',
-  },
+header: {
+  position: 'sticky',
+  top: 0,
+  zIndex: 100,
 
-  mainButton: {
-    width: '100%',
-    padding: '14px',
-    border: 'none',
-    borderRadius: '10px',
-    background: '#d4af37',
-    color: '#000',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    fontSize: '15px',
-  },
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
 
-  message: {
-    marginTop: '15px',
-    padding: '12px',
-    borderRadius: '10px',
-    background: '#1c1c1c',
-    color: '#d4af37',
-    textAlign: 'center',
-  },
+  padding: '17px 28px',
 
-  contactBox: {
-    marginTop: '25px',
-    paddingTop: '20px',
-    borderTop: '1px solid #292929',
-    color: '#999',
-    textAlign: 'center',
-    lineHeight: '1.9',
-    fontSize: '13px',
-  },
+  background:
+    'linear-gradient(135deg, rgba(2,18,45,0.94), rgba(1,8,22,0.94))',
 
-  dashboardPage: {
-    minHeight: '100vh',
-    background: '#080808',
-    color: '#fff',
-    fontFamily: 'Arial, sans-serif',
-  },
+  border: '1px solid rgba(30,140,255,0.35)',
+  borderTop: '1px solid rgba(70,190,255,0.55)',
 
-  header: {
-    minHeight: '75px',
-    padding: '0 6%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    borderBottom: '1px solid #242424',
-    background: '#0d0d0d',
-    boxSizing: 'border-box',
-  },
+  borderRadius: '0 0 20px 20px',
 
-  headerLogo: {
-    color: '#d4af37',
-    fontSize: '22px',
-    fontWeight: 'bold',
-    letterSpacing: '2px',
-  },
+  backdropFilter: 'blur(22px)',
+  WebkitBackdropFilter: 'blur(22px)',
 
-  headerSub: {
-    color: '#777',
-    fontSize: '12px',
-    marginTop: '3px',
-  },
+  boxShadow:
+    '0 10px 40px rgba(0,0,0,0.45), 0 0 35px rgba(0,100,255,0.12)',
 
-  headerRight: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '15px',
-  },
+  animation: 'headerAppear 0.7s ease-out',
+},
 
-  welcome: {
-    color: '#ccc',
-    fontSize: '14px',
-  },
+headerLogo: {
+  fontSize: '23px',
+  fontWeight: '900',
+  letterSpacing: '2px',
 
-  logoutButton: {
-    padding: '9px 16px',
-    border: '1px solid #444',
-    borderRadius: '8px',
-    background: 'transparent',
-    color: '#ddd',
-    cursor: 'pointer',
-  },
+  color: '#ffffff',
 
-  hero: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '70px 6%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    boxSizing: 'border-box',
-  },
+  textShadow:
+    '0 0 12px rgba(60,180,255,0.7), 0 0 30px rgba(0,110,255,0.35)',
 
-  smallGold: {
-    color: '#d4af37',
-    fontSize: '12px',
-    fontWeight: 'bold',
-    letterSpacing: '2px',
-  },
+  animation: 'logoGlow 3s ease-in-out infinite',
+},
 
-  heroTitle: {
-    fontSize: '48px',
-    lineHeight: '1.1',
-    margin: '15px 0',
-  },
+headerSub: {
+  marginTop: '4px',
+  fontSize: '11px',
+  color: '#48bfff',
+  letterSpacing: '1px',
+},
 
-  heroText: {
-    color: '#999',
-    maxWidth: '570px',
-    lineHeight: '1.7',
-    fontSize: '16px',
-  },
+headerRight: {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '10px',
+},
 
-  heroButtons: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '25px',
-  },
+welcome: {
+  color: '#b8d5f5',
+  fontSize: '12px',
+  fontWeight: '700',
+},
 
-  goldButton: {
-    padding: '13px 22px',
-    border: 'none',
-    borderRadius: '9px',
-    background: '#d4af37',
-    color: '#000',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-  },
+logoutButton: {
+  padding: '11px 18px',
+  borderRadius: '12px',
 
-  outlineButton: {
-    padding: '13px 22px',
-    border: '1px solid #444',
-    borderRadius: '9px',
-    background: 'transparent',
-    color: '#fff',
-    cursor: 'pointer',
-  },
+  border: '1px solid rgba(40,160,255,0.5)',
 
-  heroIcon: {
-    fontSize: '110px',
-    opacity: '.8',
-  },
+  background:
+    'linear-gradient(135deg, rgba(10,80,170,0.35), rgba(5,30,70,0.5))',
 
-  section: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '20px 6% 70px',
-    boxSizing: 'border-box',
-  },
+  color: '#5bc7ff',
 
-  sectionHeading: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'end',
-    marginBottom: '30px',
-  },
+  fontSize: '12px',
+  fontWeight: '900',
 
-  sectionTitle: {
-    fontSize: '32px',
-    margin: '5px 0 0',
-  },
+  cursor: 'pointer',
 
-  serviceCount: {
-    color: '#888',
-    fontSize: '14px',
-  },
+  boxShadow:
+    '0 0 18px rgba(0,130,255,0.12)',
 
-  serviceGrid: {
-    display: 'grid',
-    gridTemplateColumns:
-      'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '18px',
-  },
+  transition: 'all 0.3s ease',
+},
 
-  serviceCard: {
-    background: '#111',
-    border: '1px solid #252525',
-    borderRadius: '18px',
-    padding: '23px',
-    transition: '0.2s',
-  },
+hero: {
+  position: 'relative',
+  margin: '25px',
+  minHeight: '500px',
+  padding: '55px 35px',
+  borderRadius: '28px',
+  overflow: 'hidden',
 
-  serviceIcon: {
-    width: '52px',
-    height: '52px',
-    borderRadius: '14px',
-    background: '#1c1a12',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '25px',
-    marginBottom: '18px',
-  },
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 
-  serviceTitle: {
-    fontSize: '18px',
-    margin: '0 0 10px',
-  },
+  background:
+    'radial-gradient(circle at 50% 20%, rgba(0,140,255,0.28), transparent 42%), linear-gradient(135deg, #061c42 0%, #03122d 48%, #020817 100%)',
 
-  serviceDescription: {
-    color: '#888',
-    lineHeight: '1.6',
-    minHeight: '48px',
-    fontSize: '14px',
-  },
+  border: '1px solid rgba(40,180,255,0.55)',
 
-  cardBottom: {
-    marginTop: '20px',
-    paddingTop: '15px',
-    borderTop: '1px solid #242424',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
+  boxShadow:
+    '0 25px 80px rgba(0,0,0,0.55), 0 0 60px rgba(0,110,255,0.18), inset 0 0 50px rgba(0,120,255,0.08)',
 
-  price: {
-    color: '#d4af37',
-    fontWeight: 'bold',
-  },
+  animation: 'dashboardHeroIn 0.9s ease-out',
 
-  orderButton: {
-    border: 'none',
-    background: '#d4af37',
-    color: '#000',
-    padding: '9px 14px',
-    borderRadius: '8px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-  },
+  boxSizing: 'border-box',
+},
+heroContent: {
+  position: 'relative',
+  zIndex: 10,
+  width: '100%',
+  maxWidth: '950px',
+  textAlign: 'center',
+},
 
-  infoSection: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '0 6% 60px',
-    display: 'grid',
-    gridTemplateColumns:
-      'repeat(auto-fit, minmax(230px, 1fr))',
-    gap: '15px',
-    boxSizing: 'border-box',
-  },
+heroHighlight: {
+  background:
+    'linear-gradient(90deg, #38bdf8, #08aaff, #60a5fa)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+},
 
-  infoCard: {
-    display: 'flex',
-    gap: '15px',
-    alignItems: 'center',
-    padding: '20px',
-    background: '#101010',
-    border: '1px solid #242424',
-    borderRadius: '14px',
-  },
+heroGlowOne: {
+  position: 'absolute',
+  width: '330px',
+  height: '330px',
+  borderRadius: '50%',
+  background: '#087cff',
+  filter: 'blur(110px)',
+  opacity: 0.20,
+  top: '-150px',
+  left: '-120px',
+  animation: 'heroGlowFloat 7s ease-in-out infinite',
+},
 
-  infoIcon: {
-    fontSize: '28px',
-  },
+heroGlowTwo: {
+  position: 'absolute',
+  width: '380px',
+  height: '380px',
+  borderRadius: '50%',
+  background: '#00c6ff',
+  filter: 'blur(120px)',
+  opacity: 0.14,
+  right: '-150px',
+  bottom: '-180px',
+  animation: 'heroGlowFloat 9s ease-in-out infinite reverse',
+},
 
-  footer: {
-    borderTop: '1px solid #242424',
-    padding: '25px 6%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    color: '#777',
-    fontSize: '13px',
-    boxSizing: 'border-box',
-  },
-}
+heroGlowThree: {
+  position: 'absolute',
+  width: '190px',
+  height: '190px',
+  borderRadius: '50%',
+  background: '#2563eb',
+  filter: 'blur(85px)',
+  opacity: 0.20,
+  left: '45%',
+  top: '38%',
+  animation: 'heroCenterGlow 5s ease-in-out infinite',
+},
+
+heroParticle: {
+  position: 'absolute',
+  zIndex: 4,
+  color: '#38bdf8',
+  fontSize: '22px',
+  textShadow: '0 0 20px #00aaff',
+  opacity: 0.8,
+  animation: 'particleFloat 5s ease-in-out infinite',
+},
+
+particle1: {
+  top: '18%',
+  left: '10%',
+},
+
+particle2: {
+  top: '32%',
+  right: '11%',
+  fontSize: '30px',
+  animationDelay: '1s',
+},
+
+particle3: {
+  bottom: '18%',
+  left: '18%',
+  animationDelay: '2s',
+},
+
+particle4: {
+  top: '22%',
+  left: '78%',
+  fontSize: '15px',
+  animationDelay: '3s',
+},
+
+particle5: {
+  bottom: '25%',
+  right: '19%',
+  animationDelay: '1.5s',
+},
+
+heroHighlight: {
+  background:
+    'linear-gradient(90deg, #38bdf8, #2563eb, #60a5fa)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
+  textShadow: '0 0 35px rgba(37,150,255,0.25)',
+},
+
+heroGlowOne: {
+  position: 'absolute',
+  width: '300px',
+  height: '300px',
+  borderRadius: '50%',
+  background: '#087cff',
+  filter: 'blur(100px)',
+  opacity: 0.20,
+  top: '-130px',
+  left: '-100px',
+  animation: 'heroGlowFloat 7s ease-in-out infinite',
+},
+
+heroGlowTwo: {
+  position: 'absolute',
+  width: '350px',
+  height: '350px',
+  borderRadius: '50%',
+  background: '#00c6ff',
+  filter: 'blur(110px)',
+  opacity: 0.15,
+  right: '-130px',
+  bottom: '-160px',
+  animation: 'heroGlowFloat 9s ease-in-out infinite reverse',
+},
+
+heroGlowThree: {
+  position: 'absolute',
+  width: '180px',
+  height: '180px',
+  borderRadius: '50%',
+  background: '#2563eb',
+  filter: 'blur(80px)',
+  opacity: 0.18,
+  left: '48%',
+  top: '35%',
+  animation: 'heroCenterGlow 5s ease-in-out infinite',
+},
+
+heroParticle: {
+  position: 'absolute',
+  zIndex: 3,
+  color: '#38bdf8',
+  fontSize: '22px',
+  textShadow: '0 0 18px #00aaff',
+  opacity: 0.75,
+  animation: 'particleFloat 5s ease-in-out infinite',
+},
+
+particle1: {
+  top: '18%',
+  left: '10%',
+  animationDelay: '0s',
+},
+
+particle2: {
+  top: '35%',
+  right: '12%',
+  fontSize: '28px',
+  animationDelay: '1s',
+},
+
+particle3: {
+  bottom: '18%',
+  left: '17%',
+  animationDelay: '2s',
+},
+
+particle4: {
+  top: '23%',
+  left: '78%',
+  fontSize: '16px',
+  animationDelay: '3s',
+},
+
+particle5: {
+  bottom: '25%',
+  right: '20%',
+  animationDelay: '1.5s',
+},
+
+lightWaveOne: {
+  position: 'absolute',
+  width: '130%',
+  height: '120px',
+  left: '-15%',
+  bottom: '-35px',
+  borderTop: '3px solid rgba(0,190,255,0.55)',
+  borderRadius: '50%',
+  transform: 'rotate(-5deg)',
+  boxShadow:
+    '0 -8px 25px rgba(0,150,255,0.35)',
+  animation: 'waveMove 6s ease-in-out infinite',
+},
+
+lightWaveTwo: {
+  position: 'absolute',
+  width: '120%',
+  height: '100px',
+  left: '-10%',
+  bottom: '5px',
+  borderTop: '2px solid rgba(37,99,235,0.45)',
+  borderRadius: '50%',
+  transform: 'rotate(4deg)',
+  animation: 'waveMoveReverse 8s ease-in-out infinite',
+},
+
+hero: {
+  position: 'relative',
+  margin: '25px',
+  minHeight: '500px',
+  padding: '55px 35px',
+  borderRadius: '28px',
+  overflow: 'hidden',
+
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+
+  background:
+    'radial-gradient(circle at 50% 20%, rgba(37,99,235,0.28), transparent 45%), linear-gradient(135deg, #061b3d 0%, #031027 48%, #020817 100%)',
+
+  border: '1px solid rgba(56,189,248,0.45)',
+
+  boxShadow:
+    '0 25px 80px rgba(0,0,0,0.55), 0 0 60px rgba(0,110,255,0.16), inset 0 0 50px rgba(0,120,255,0.08)',
+
+  animation: 'dashboardHeroIn 0.8s ease-out',
+
+  boxSizing: 'border-box',
+},
+
+smallGold: {
+  color: '#38a7ff',
+  fontSize: '11px',
+  fontWeight: '900',
+  letterSpacing: '2px',
+  marginBottom: '12px',
+},
+
+heroTitle: {
+  margin: 0,
+  fontSize: 'clamp(34px, 6vw, 64px)',
+  lineHeight: '1.08',
+  fontWeight: '900',
+  color: '#ffffff',
+  letterSpacing: '-1.5px',
+  textShadow:
+    '0 4px 30px rgba(0,0,0,0.45), 0 0 25px rgba(255,255,255,0.08)',
+  animation: 'titleReveal 1s ease-out',
+},
+
+heroText: {
+  maxWidth: '720px',
+  margin: '20px auto 0',
+  color: '#a8c7e8',
+  fontSize: '15px',
+  lineHeight: '1.7',
+  animation: 'textReveal 1.2s ease-out',
+},
+
+heroButtons: {
+  display: 'flex',
+  gap: '12px',
+  flexWrap: 'wrap',
+  marginTop: '25px',
+},
+
+secondaryButton: {
+  padding: '14px 22px',
+  borderRadius: '13px',
+  border: '1px solid rgba(70,160,255,0.3)',
+  background: 'rgba(20,90,170,0.15)',
+  color: '#8ec7ff',
+  fontWeight: '800',
+  cursor: 'pointer',
+  transition: 'all 0.3s ease',
+},
+infoSection: {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(3, 1fr)',
+  gap: '20px',
+  margin: '35px 25px',
+},
+
+infoCard: {
+  position: 'relative',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '18px',
+  padding: '24px',
+  borderRadius: '22px',
+
+  background:
+    'linear-gradient(145deg, rgba(8,45,100,0.72), rgba(2,14,32,0.92))',
+
+  border: '1px solid rgba(45,160,255,0.35)',
+
+  boxShadow:
+    '0 18px 45px rgba(0,0,0,0.35), inset 0 0 30px rgba(0,130,255,0.06)',
+
+  overflow: 'hidden',
+
+  transition:
+    'transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease',
+
+  animation: 'infoCardAppear 0.8s ease-out',
+},
+
+infoIcon: {
+  width: '62px',
+  height: '62px',
+  minWidth: '62px',
+
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+
+  borderRadius: '50%',
+
+  background:
+    'radial-gradient(circle at 35% 30%, #159cff, #063d91 70%, #021a40)',
+
+  border: '1px solid rgba(60,190,255,0.65)',
+
+  fontSize: '27px',
+
+  boxShadow:
+    '0 0 25px rgba(0,150,255,0.35), inset 0 0 15px rgba(255,255,255,0.08)',
+
+  animation: 'iconPulse 3s ease-in-out infinite',
+},
+
+infoTitle: {
+  margin: 0,
+  color: '#ffffff',
+  fontSize: '17px',
+  fontWeight: '900',
+},
+
+infoText: {
+  margin: '7px 0 0',
+  color: '#8eb5dc',
+  fontSize: '12px',
+  lineHeight: '1.5',
+},
+
+infoHighlight: {
+  display: 'block',
+  marginTop: '3px',
+  color: '#38bdf8',
+  fontSize: '14px',
+},
+heroPrimaryButton: {
+  minWidth: '300px',
+  padding: '17px 28px',
+
+  borderRadius: '15px',
+  border: '1px solid rgba(100,220,255,0.8)',
+
+  background:
+    'linear-gradient(135deg, #08baff, #1674ff, #2454e8)',
+
+  color: '#fff',
+
+  fontSize: '14px',
+  fontWeight: '900',
+
+  cursor: 'pointer',
+
+  boxShadow:
+    '0 0 25px rgba(0,160,255,0.45), 0 12px 35px rgba(0,80,220,0.3)',
+
+  transition: 'all 0.3s ease',
+
+  animation: 'buttonGlow 3s ease-in-out infinite',
+},
+
+heroSecondaryButton: {
+  minWidth: '240px',
+  padding: '17px 28px',
+
+  borderRadius: '15px',
+
+  border: '1px solid rgba(40,170,255,0.65)',
+
+  background: 'rgba(4,30,70,0.5)',
+
+  color: '#72d3ff',
+
+  fontSize: '14px',
+  fontWeight: '900',
+
+  cursor: 'pointer',
+
+  boxShadow:
+    '0 0 20px rgba(0,130,255,0.12)',
+
+  transition: 'all 0.3s ease',
+},
+};
 
 export default App
