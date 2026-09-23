@@ -102,78 +102,179 @@ function App() {
   }
 
   if (session) {
-  const userEmail = session.user.email
+    const userEmail = session.user.email
+
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/dashboard"
+            element={
+              userEmail === 'gopi742301@gmail.com' ? (
+                <AdminDashboard
+                  session={session}
+                  logout={logout}
+                />
+              ) : (
+                <Dashboard
+                  session={session}
+                  services={services}
+                  logout={logout}
+                />
+              )
+            }
+          />
+
+          <Route
+            path="/orders"
+            element={
+              userEmail === 'gopi742301@gmail.com' ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <OrdersPage
+                  session={session}
+                  logout={logout}
+                />
+              )
+            }
+          />
+
+          <Route
+            path="/services"
+            element={
+              userEmail === 'gopi742301@gmail.com' ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <ServicesPage
+                  session={session}
+                  services={services}
+                  logout={logout}
+                />
+              )
+            }
+          />
+
+          <Route
+            path="/payment/:orderId"
+            element={
+              userEmail === 'gopi742301@gmail.com' ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <PaymentPage session={session} />
+              )
+            }
+          />
+
+          <Route
+            path="*"
+            element={<Navigate to="/dashboard" replace />}
+          />
+        </Routes>
+      </BrowserRouter>
+    )
+  }
 
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="/dashboard"
-          element={
-            userEmail === 'gopi742301@gmail.com' ? (
-              <AdminDashboard
-                session={session}
-                logout={logout}
-              />
-            ) : (
-              <Dashboard
-                session={session}
-                services={services}
-                logout={logout}
-              />
-            )
+    <>
+      <style>{`
+        /* ================================
+           GOPI ONLINE - MOBILE RESPONSIVE
+           ================================ */
+
+        .services-grid {
+          width: 100%;
+        }
+
+        .service-card {
+          box-sizing: border-box;
+        }
+
+        /* TABLET */
+        @media (max-width: 900px) {
+          .services-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 16px !important;
           }
-        />
-        <Route
-  path="/orders"
-  element={
-    userEmail === 'gopi742301@gmail.com' ? (
-      <Navigate to="/dashboard" replace />
-    ) : (
-      <OrdersPage
-        session={session}
-        logout={logout}
-      />
-    )
-  }
-  />
-  {/* SERVICES PAGE */}
-  <Route
-  path="/services"
-  element={
-    userEmail === 'gopi742301@gmail.com' ? (
-      <Navigate to="/dashboard" replace />
-    ) : (
-      <ServicesPage
-        session={session}
-        services={services}
-        logout={logout}
-      />
-    )
-  }
-/>
-<Route
-  path="/payment/:orderId"
-  element={
-    userEmail === 'gopi742301@gmail.com' ? (
-      <Navigate to="/dashboard" replace />
-    ) : (
-      <PaymentPage session={session} />
-    )
-  }
-/>
 
-        <Route
-          path="*"
-          element={<Navigate to="/dashboard" replace />}
-        />
-      </Routes>
-    </BrowserRouter>
-  )
-}
+          .service-card {
+            min-height: 300px !important;
+            padding: 20px !important;
+          }
+        }
 
-  return (
-  <div style={styles.loginPage}>
+        /* MOBILE */
+        @media (max-width: 600px) {
+          .services-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 12px !important;
+          }
+
+          .service-card {
+            width: 100% !important;
+            min-width: 0 !important;
+            min-height: 0 !important;
+            padding: 16px !important;
+            border-radius: 16px !important;
+          }
+
+          .service-card h2 {
+            font-size: 16px !important;
+            line-height: 1.35 !important;
+            word-break: normal !important;
+            overflow-wrap: break-word !important;
+            margin-bottom: 8px !important;
+          }
+
+          .service-card p {
+            font-size: 12px !important;
+            line-height: 1.55 !important;
+            min-height: 72px !important;
+            margin-bottom: 14px !important;
+          }
+
+          .service-card > div:first-child {
+            width: 50px !important;
+            height: 50px !important;
+            font-size: 25px !important;
+            border-radius: 15px !important;
+            margin-bottom: 14px !important;
+          }
+
+          .service-card button {
+            padding: 9px 10px !important;
+            font-size: 11px !important;
+            white-space: nowrap !important;
+          }
+
+          .service-card [style*="font-size: 23px"] {
+            font-size: 19px !important;
+          }
+
+          /* One Stop Digital Solution */
+          .one-stop-card {
+            grid-column: 1 / -1 !important;
+            min-height: 280px !important;
+            width: 100% !important;
+          }
+        }
+
+        /* SMALL PHONES */
+        @media (max-width: 380px) {
+          .services-grid {
+            grid-template-columns: 1fr !important;
+          }
+
+          .service-card {
+            min-height: 250px !important;
+          }
+
+          .one-stop-card {
+            grid-column: 1 !important;
+          }
+        }
+      `}</style>
+
+      <div style={styles.loginPage}>
 
     {/* Animated Background */}
     <div style={styles.bgGlow1}></div>
@@ -304,10 +405,11 @@ function App() {
 
       <div style={styles.bottomText}>
         © 2026 GOPI ONLINE • All Rights Reserved
+        
       </div>
-
     </div>
-  </div>
+    </div>
+    </>
   )
 }
 
@@ -459,428 +561,416 @@ function PaymentPage({ session }) {
     <div
       style={{
         minHeight: '100vh',
-        background:
-          'linear-gradient(135deg, #080808, #121212, #080808)',
+        background: 'linear-gradient(135deg, #080808, #121212, #080808)',
         color: '#fff',
         padding: '30px 18px 60px',
       }}
     >
-  
-  
-     <div
-  style={{
-    maxWidth: '760px',
-    margin: '0 auto',
-  }}
->
-  {/* HEADER */}
-  <div
-    style={{
-      display: 'flex',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: '25px',
-      gap: '15px',
-    }}
-  >
-    <div>
       <div
         style={{
-          color: '#d4af37',
-          fontSize: '12px',
-          fontWeight: '800',
-          letterSpacing: '3px',
+          maxWidth: '760px',
+          margin: '0 auto',
         }}
       >
-        GOPI ONLINE
-      </div>
-
-      <h1
-        style={{
-          margin: '7px 0 0',
-          fontSize: '30px',
-        }}
-      >
-        Secure Payment
-      </h1>
-
-      <div
-        style={{
-          color: '#777',
-          fontSize: '13px',
-          marginTop: '5px',
-        }}
-      >
-        Complete your payment using UPI
-      </div>
-    </div>
-
-    <button
-      onClick={() => {
-        window.location.href = '/orders'
-      }}
-      style={{
-        padding: '10px 15px',
-        borderRadius: '9px',
-        border: '1px solid #444',
-        background: '#171717',
-        color: '#fff',
-        cursor: 'pointer',
-      }}
-    >
-      ← Orders
-    </button>
-  </div>
-
-  {/* ORDER SUMMARY */}
-  <div
-    style={{
-      background: '#151515',
-      border: '1px solid #292929',
-      borderRadius: '18px',
-      padding: '22px',
-      marginBottom: '20px',
-    }}
-  >
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gap: '15px',
-        flexWrap: 'wrap',
-      }}
-    >
-      <div>
+        {/* HEADER */}
         <div
           style={{
-            color: '#777',
-            fontSize: '11px',
-            letterSpacing: '1px',
-            marginBottom: '6px',
-          }}
-        >
-          ORDER ID
-        </div>
-
-        <div
-          style={{
-            fontSize: '18px',
-            fontWeight: '800',
-          }}
-        >
-          #{order.id}
-        </div>
-      </div>
-
-      <div style={{ textAlign: 'right' }}>
-        <div
-          style={{
-            color: '#777',
-            fontSize: '11px',
-            marginBottom: '5px',
-          }}
-        >
-          AMOUNT TO PAY
-        </div>
-
-        <div
-          style={{
-            color: '#d4af37',
-            fontSize: '28px',
-            fontWeight: '900',
-          }}
-        >
-          ₹{order.amount}
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {/* MAIN PAYMENT CARD */}
-  <div
-    style={{
-      background:
-        'linear-gradient(145deg, #181818, #101010)',
-      border: '1px solid #292929',
-      borderRadius: '20px',
-      padding: '28px',
-    }}
-  >
-    <div style={{ textAlign: 'center' }}>
-      <div
-        style={{
-          display: 'inline-block',
-          padding: '7px 14px',
-          borderRadius: '30px',
-          background: '#25210f',
-          color: '#d4af37',
-          fontSize: '11px',
-          fontWeight: '800',
-          letterSpacing: '1px',
-          marginBottom: '12px',
-        }}
-      >
-        UPI PAYMENT
-      </div>
-
-      <h2
-        style={{
-          margin: '0',
-          fontSize: '24px',
-        }}
-      >
-        Scan & Pay
-      </h2>
-
-      <p
-        style={{
-          color: '#888',
-          fontSize: '14px',
-          lineHeight: '1.6',
-          margin: '8px auto 22px',
-          maxWidth: '480px',
-        }}
-      >
-        Open Google Pay, PhonePe, Paytm or any UPI app
-        on your mobile and scan the QR code below.
-      </p>
-
-      {/* QR CODE */}
-      <div
-        style={{
-          display: 'inline-block',
-          background: '#fff',
-          padding: '14px',
-          borderRadius: '18px',
-          boxShadow: '0 15px 40px rgba(0,0,0,0.4)',
-        }}
-      >
-        <img
-          src={paymentQR}
-          alt="GOPI ONLINE UPI QR Code"
-          style={{
-            width: '280px',
-            height: '280px',
-            objectFit: 'contain',
-            display: 'block',
-          }}
-        />
-      </div>
-
-      {/* QR INSTRUCTION */}
-      <div
-        style={{
-          marginTop: '16px',
-          color: '#aaa',
-          fontSize: '13px',
-        }}
-      >
-        Scan this QR code to pay
-      </div>
-    </div>
-
-    {/* PAYMENT DETAILS */}
-    <div
-      style={{
-        marginTop: '25px',
-        display: 'grid',
-        gap: '12px',
-      }}
-    >
-      <div
-        style={{
-          padding: '17px',
-          background: '#0d0d0d',
-          border: '1px solid #333',
-          borderRadius: '13px',
-          textAlign: 'center',
-        }}
-      >
-        <div
-          style={{
-            color: '#777',
-            fontSize: '11px',
-            marginBottom: '7px',
-          }}
-        >
-          UPI ID
-        </div>
-
-        <div
-          style={{
-            color: '#d4af37',
-            fontSize: '18px',
-            fontWeight: '900',
-            wordBreak: 'break-all',
-          }}
-        >
-          gopi742301@okicici
-        </div>
-      </div>
-
-      <div
-        style={{
-          padding: '14px',
-          borderRadius: '12px',
-          background: '#121212',
-          border: '1px solid #292929',
-          color: '#aaa',
-          fontSize: '13px',
-          textAlign: 'center',
-        }}
-      >
-        Please pay exactly{' '}
-        <strong style={{ color: '#fff' }}>
-          ₹{order.amount}
-        </strong>{' '}
-        for this order.
-      </div>
-    </div>
-
-    {/* OPTIONAL UPI BUTTON */}
-    <button
-      onClick={() => {
-        const upiUrl =
-          `upi://pay?pa=gopi742301@okicici` +
-          `&pn=GOPI%20ONLINE` +
-          `&am=${order.amount}` +
-          `&cu=INR`
-
-        window.location.href = upiUrl
-      }}
-      style={{
-        width: '100%',
-        marginTop: '18px',
-        padding: '15px',
-        borderRadius: '11px',
-        border: 'none',
-        background: '#d4af37',
-        color: '#111',
-        fontWeight: '900',
-        fontSize: '15px',
-        cursor: 'pointer',
-      }}
-    >
-      OPEN UPI PAYMENT →
-    </button>
-
-    {/* UTR SECTION */}
-    <div
-      style={{
-        marginTop: '30px',
-        paddingTop: '25px',
-        borderTop: '1px solid #292929',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '10px',
-          marginBottom: '7px',
-        }}
-      >
-        <div
-          style={{
-            width: '30px',
-            height: '30px',
-            borderRadius: '50%',
-            background: '#25210f',
-            color: '#d4af37',
             display: 'flex',
+            justifyContent: 'space-between',
             alignItems: 'center',
-            justifyContent: 'center',
-            fontWeight: '900',
+            marginBottom: '25px',
+            gap: '15px',
           }}
         >
-          2
+          <div>
+            <div
+              style={{
+                color: '#d4af37',
+                fontSize: '12px',
+                fontWeight: '800',
+                letterSpacing: '3px',
+              }}
+            >
+              GOPI ONLINE
+            </div>
+
+            <h1
+              style={{
+                margin: '7px 0 0',
+                fontSize: '30px',
+              }}
+            >
+              Secure Payment
+            </h1>
+
+            <div
+              style={{
+                color: '#777',
+                fontSize: '13px',
+                marginTop: '5px',
+              }}
+            >
+              Complete your payment using UPI
+            </div>
+          </div>
+
+          <button
+            onClick={() => {
+              window.location.href = '/orders'
+            }}
+            style={{
+              padding: '10px 15px',
+              borderRadius: '9px',
+              border: '1px solid #444',
+              background: '#171717',
+              color: '#fff',
+              cursor: 'pointer',
+            }}
+          >
+            ← Orders
+          </button>
         </div>
 
-        <h3
+        {/* ORDER SUMMARY */}
+        <div
           style={{
-            margin: 0,
-            fontSize: '18px',
+            background: '#151515',
+            border: '1px solid #292929',
+            borderRadius: '18px',
+            padding: '22px',
+            marginBottom: '20px',
           }}
         >
-          Submit Payment Details
-        </h3>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              gap: '15px',
+              flexWrap: 'wrap',
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  color: '#777',
+                  fontSize: '11px',
+                  letterSpacing: '1px',
+                  marginBottom: '6px',
+                }}
+              >
+                ORDER ID
+              </div>
+
+              <div
+                style={{
+                  fontSize: '18px',
+                  fontWeight: '800',
+                }}
+              >
+                #{order.id}
+              </div>
+            </div>
+
+            <div style={{ textAlign: 'right' }}>
+              <div
+                style={{
+                  color: '#777',
+                  fontSize: '11px',
+                  marginBottom: '5px',
+                }}
+              >
+                AMOUNT TO PAY
+              </div>
+
+              <div
+                style={{
+                  color: '#d4af37',
+                  fontSize: '28px',
+                  fontWeight: '900',
+                }}
+              >
+                ₹{order.amount}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* MAIN PAYMENT CARD */}
+        <div
+          style={{
+            background: 'linear-gradient(145deg, #181818, #101010)',
+            border: '1px solid #292929',
+            borderRadius: '20px',
+            padding: '28px',
+          }}
+        >
+          <div style={{ textAlign: 'center' }}>
+            <div
+              style={{
+                display: 'inline-block',
+                padding: '7px 14px',
+                borderRadius: '30px',
+                background: '#25210f',
+                color: '#d4af37',
+                fontSize: '11px',
+                fontWeight: '800',
+                letterSpacing: '1px',
+                marginBottom: '12px',
+              }}
+            >
+              UPI PAYMENT
+            </div>
+
+            <h2
+              style={{
+                margin: '0',
+                fontSize: '24px',
+              }}
+            >
+              Scan & Pay
+            </h2>
+
+            <p
+              style={{
+                color: '#888',
+                fontSize: '14px',
+                lineHeight: '1.6',
+                margin: '8px auto 22px',
+                maxWidth: '480px',
+              }}
+            >
+              Open Google Pay, PhonePe, Paytm or any UPI app on your mobile and scan the QR code below.
+            </p>
+
+            {/* QR CODE */}
+            <div
+              style={{
+                display: 'inline-block',
+                background: '#fff',
+                padding: '14px',
+                borderRadius: '18px',
+                boxShadow: '0 15px 40px rgba(0,0,0,0.4)',
+              }}
+            >
+              <img
+                src={paymentQR}
+                alt="GOPI ONLINE UPI QR Code"
+                style={{
+                  width: '280px',
+                  height: '280px',
+                  objectFit: 'contain',
+                  display: 'block',
+                }}
+              />
+            </div>
+
+            {/* QR INSTRUCTION */}
+            <div
+              style={{
+                marginTop: '16px',
+                color: '#aaa',
+                fontSize: '13px',
+              }}
+            >
+              Scan this QR code to pay
+            </div>
+          </div>
+
+          {/* PAYMENT DETAILS */}
+          <div
+            style={{
+              marginTop: '25px',
+              display: 'grid',
+              gap: '12px',
+            }}
+          >
+            <div
+              style={{
+                padding: '17px',
+                background: '#0d0d0d',
+                border: '1px solid #333',
+                borderRadius: '13px',
+                textAlign: 'center',
+              }}
+            >
+              <div
+                style={{
+                  color: '#777',
+                  fontSize: '11px',
+                  marginBottom: '7px',
+                }}
+              >
+                UPI ID
+              </div>
+
+              <div
+                style={{
+                  color: '#d4af37',
+                  fontSize: '18px',
+                  fontWeight: '900',
+                  wordBreak: 'break-all',
+                }}
+              >
+                gopi742301@okicici
+              </div>
+            </div>
+
+            <div
+              style={{
+                padding: '14px',
+                borderRadius: '12px',
+                background: '#121212',
+                border: '1px solid #292929',
+                color: '#aaa',
+                fontSize: '13px',
+                textAlign: 'center',
+              }}
+            >
+              Please pay exactly{' '}
+              <strong style={{ color: '#fff' }}>
+                ₹{order.amount}
+              </strong>{' '}
+              for this order.
+            </div>
+          </div>
+
+          {/* OPTIONAL UPI BUTTON */}
+          <button
+            onClick={() => {
+              const upiUrl =
+                `upi://pay?pa=gopi742301@okicici` +
+                `&pn=GOPI%20ONLINE` +
+                `&am=${order.amount}` +
+                `&cu=INR`
+
+              window.location.href = upiUrl
+            }}
+            style={{
+              width: '100%',
+              marginTop: '18px',
+              padding: '15px',
+              borderRadius: '11px',
+              border: 'none',
+              background: '#d4af37',
+              color: '#111',
+              fontWeight: '900',
+              fontSize: '15px',
+              cursor: 'pointer',
+            }}
+          >
+            OPEN UPI PAYMENT →
+          </button>
+
+          {/* UTR SECTION */}
+          <div
+            style={{
+              marginTop: '30px',
+              paddingTop: '25px',
+              borderTop: '1px solid #292929',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                marginBottom: '7px',
+              }}
+            >
+              <div
+                style={{
+                  width: '30px',
+                  height: '30px',
+                  borderRadius: '50%',
+                  background: '#25210f',
+                  color: '#d4af37',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontWeight: '900',
+                }}
+              >
+                2
+              </div>
+
+              <h3
+                style={{
+                  margin: 0,
+                  fontSize: '18px',
+                }}
+              >
+                Submit Payment Details
+              </h3>
+            </div>
+
+            <p
+              style={{
+                color: '#888',
+                fontSize: '13px',
+                lineHeight: '1.6',
+                marginBottom: '12px',
+              }}
+            >
+              After completing the payment, enter the UTR or Transaction ID received from your UPI app.
+            </p>
+
+            <input
+              type="text"
+              placeholder="Enter UTR / Transaction ID"
+              value={transactionReference}
+              onChange={(e) => setTransactionReference(e.target.value)}
+              style={{
+                width: '100%',
+                boxSizing: 'border-box',
+                padding: '14px',
+                borderRadius: '11px',
+                border: '1px solid #333',
+                background: '#0d0d0d',
+                color: '#fff',
+                outline: 'none',
+                fontSize: '14px',
+              }}
+            />
+
+            <button
+              onClick={submitPayment}
+              disabled={submitting}
+              style={{
+                width: '100%',
+                marginTop: '12px',
+                padding: '14px',
+                borderRadius: '11px',
+                border: '1px solid #444',
+                background: submitting ? '#181818' : '#202020',
+                color: '#fff',
+                fontWeight: '800',
+                cursor: submitting ? 'not-allowed' : 'pointer',
+              }}
+            >
+              {submitting ? 'SUBMITTING...' : 'SUBMIT PAYMENT DETAILS'}
+            </button>
+          </div>
+        </div>
+
+        {/* SECURITY NOTICE */}
+        <div
+          style={{
+            marginTop: '16px',
+            padding: '15px',
+            borderRadius: '12px',
+            background: '#171717',
+            border: '1px solid #292929',
+            color: '#777',
+            fontSize: '12px',
+            lineHeight: '1.6',
+            textAlign: 'center',
+          }}
+        >
+          🔒 Payment is verified manually using the submitted UTR / Transaction ID. Your order will be processed after payment verification.
+        </div>
       </div>
-
-      <p
-        style={{
-          color: '#888',
-          fontSize: '13px',
-          lineHeight: '1.6',
-          marginBottom: '12px',
-        }}
-      >
-        After completing the payment, enter the UTR or
-        Transaction ID received from your UPI app.
-      </p>
-
-      <input
-        type="text"
-        placeholder="Enter UTR / Transaction ID"
-        value={transactionReference}
-        onChange={(e) =>
-          setTransactionReference(e.target.value)
-        }
-        style={{
-          width: '100%',
-          boxSizing: 'border-box',
-          padding: '14px',
-          borderRadius: '11px',
-          border: '1px solid #333',
-          background: '#0d0d0d',
-          color: '#fff',
-          outline: 'none',
-          fontSize: '14px',
-        }}
-      />
-
-      <button
-        onClick={submitPayment}
-        disabled={submitting}
-        style={{
-          width: '100%',
-          marginTop: '12px',
-          padding: '14px',
-          borderRadius: '11px',
-          border: '1px solid #444',
-          background: submitting ? '#181818' : '#202020',
-          color: '#fff',
-          fontWeight: '800',
-          cursor: submitting ? 'not-allowed' : 'pointer',
-        }}
-      >
-        {submitting
-          ? 'SUBMITTING...'
-          : 'SUBMIT PAYMENT DETAILS'}
-      </button>
     </div>
-  </div>
-
-  {/* SECURITY NOTICE */}
-  <div
-    style={{
-      marginTop: '16px',
-      padding: '15px',
-      borderRadius: '12px',
-      background: '#171717',
-      border: '1px solid #292929',
-      color: '#777',
-      fontSize: '12px',
-      lineHeight: '1.6',
-      textAlign: 'center',
-    }}
-  >
-    🔒 Payment is verified manually using the submitted
-    UTR / Transaction ID. Your order will be processed
-    after payment verification.
-  </div>
-</div>
-</div>
   )
 }
 
@@ -2388,12 +2478,14 @@ function ServicesPage({ session, services, logout }) {
             </div>
           ) : (
             <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-                gap: '18px',
-              }}
-            >
+  className="services-grid"
+  style={{
+    display: 'grid',
+    gridTemplateColumns:
+      'repeat(4, minmax(0, 1fr))',
+    gap: '22px',
+  }}
+>
               {services.map((service, index) => {
                 const colors = [
                   '#00d9ff',
@@ -2408,6 +2500,7 @@ function ServicesPage({ session, services, logout }) {
 
                 return (
                   <div
+                  className="service-card"
                     key={service.id}
                     onMouseEnter={() => setHoveredService(service.id)}
                     onMouseLeave={() => setHoveredService(null)}
@@ -3687,6 +3780,7 @@ button:active {
       inset 0 0 55px rgba(0, 140, 255, 0.10);
   }
 }
+  
 
 
     `}</style>
