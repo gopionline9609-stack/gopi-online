@@ -109,3 +109,64 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+/* ==============================
+   GOPI ONLINE MOBILE FIX
+   ============================== */
+
+@media (max-width: 600px) {
+
+  .services-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .service-card {
+    width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    padding: 16px !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .service-card h2 {
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .service-card p {
+    font-size: 12px !important;
+    line-height: 1.5 !important;
+    min-height: 70px !important;
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .service-card button {
+    font-size: 10px !important;
+    padding: 9px 8px !important;
+    white-space: nowrap !important;
+  }
+
+  .one-stop-card {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-height: 280px !important;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+
+  .services-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .one-stop-card {
+    grid-column: 1 !important;
+  }
+}
